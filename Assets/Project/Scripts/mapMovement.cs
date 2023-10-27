@@ -10,7 +10,7 @@ public class Movement : MonoBehaviour
     // Start is called before the first frame update
     public Speeds CurrentSpeed;
 
-    float[] SpeedValues = { 2f, 4f, 6f, 8f };
+    float[] SpeedValues = { 5f, 10f, 15f, 20f };
     // Update is called once per frame
     void Update()
     {

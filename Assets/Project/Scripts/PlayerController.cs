@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
         rb.AddForce(Vector2.right * xMovement * movementScale, ForceMode2D.Force);
 
-        if (Input.GetKeyDown(KeyCode.Space) && canJump)
+        if (Input.GetKey(KeyCode.Space) && canJump)
         {
             animator.SetBool("jump", true);
             rb.velocity = new Vector2(rb.velocity.x, 0);
