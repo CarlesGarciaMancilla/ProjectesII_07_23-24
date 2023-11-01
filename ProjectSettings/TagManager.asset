@@ -6,6 +6,7 @@ TagManager:
   tags:
   - traps
   - ground
+  - final
   layers:
   - Default
   - TransparentFX
