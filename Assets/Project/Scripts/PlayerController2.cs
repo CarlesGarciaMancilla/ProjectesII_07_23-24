@@ -33,6 +33,7 @@ namespace TarodevController
             _col = GetComponent<CapsuleCollider2D>();
             sceneName = SceneManager.GetActiveScene().name;
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
+            _frameInput = new FrameInput();
         }
 
         private void Update()
@@ -67,6 +68,8 @@ namespace TarodevController
         private void FixedUpdate()
         {
             CheckCollisions();
+            Debug.Log("Ground Hit: " + groundHit);
+            Debug.Log("Ceiling Hit: " + ceilingHit);
 
             HandleJump();
             HandleDirection();
@@ -135,6 +138,8 @@ namespace TarodevController
         private bool _endedJumpEarly;
         private bool _coyoteUsable;
         private float _timeJumpWasPressed;
+        private string groundHit;
+        private string ceilingHit;
 
         private bool HasBufferedJump => _bufferedJumpUsable && _time < _timeJumpWasPressed + _stats.JumpBuffer;
         private bool CanUseCoyote => _coyoteUsable && !_grounded && _time < _frameLeftGrounded + _stats.CoyoteTime;
