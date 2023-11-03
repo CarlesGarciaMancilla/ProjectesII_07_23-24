@@ -13,6 +13,7 @@ namespace TarodevController
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
+        public GameObject particles;
 
         #region Interface
 
@@ -57,6 +58,7 @@ namespace TarodevController
             {
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
+                particles.SetActive(false);
             }
         }
 
@@ -95,6 +97,7 @@ namespace TarodevController
                 _bufferedJumpUsable = true;
                 _endedJumpEarly = false;
                 GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
+                particles.SetActive(true);
             }
             // Left the Ground
             else if (_grounded && !groundHit)

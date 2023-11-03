@@ -58,3 +58,4 @@ namespace TarodevController
         public float JumpBuffer = .2f;
     }
 }
+
