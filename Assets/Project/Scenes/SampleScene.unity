@@ -22951,7 +22951,7 @@ GameObject:
   - component: {fileID: 1038999314}
   m_Layer: 0
   m_Name: White_pixel
-  m_TagString: traps
+  m_TagString: final
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
