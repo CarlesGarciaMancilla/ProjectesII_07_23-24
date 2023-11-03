@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TarodevController
 {
@@ -14,6 +15,7 @@ namespace TarodevController
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
         public GameObject particles;
+        private string sceneName;
 
         #region Interface
 
@@ -29,7 +31,7 @@ namespace TarodevController
         {
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<CapsuleCollider2D>();
-
+            sceneName = SceneManager.GetActiveScene().name;
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
         }
 
@@ -78,10 +80,23 @@ namespace TarodevController
         private float _frameLeftGrounded = float.MinValue;
         private bool _grounded;
 
+        private void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (collision.collider.CompareTag("traps"))
+            {
+                SceneManager.LoadScene(sceneName);
+            }
+            else if (collision.collider.CompareTag("final"))
+            {
+                SceneManager.LoadScene(sceneName);
+            }
+        }
+
         private void CheckCollisions()
         {
             Physics2D.queriesStartInColliders = false;
 
+           
             // Ground and Ceiling
             bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
             bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
@@ -206,4 +221,10 @@ namespace TarodevController
         public event Action Jumped;
         public Vector2 FrameInput { get; }
     }
+
+    
+        
+
+       
+    
 }
