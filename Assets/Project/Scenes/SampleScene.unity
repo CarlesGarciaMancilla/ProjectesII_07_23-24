@@ -50646,7 +50646,7 @@ GameObject:
   - component: {fileID: 1095688146}
   m_Layer: 0
   m_Name: suelo
-  m_TagString: ground
+  m_TagString: trueGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73266,6 +73266,7 @@ MonoBehaviour:
   mapa: {fileID: 1082662538}
   infierno: {fileID: 2030684537}
   invencible: 0
+  timerInvencible: 5
   timer: 3
 --- !u!70 &1577688170
 CapsuleCollider2D:

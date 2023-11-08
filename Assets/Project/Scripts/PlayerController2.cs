@@ -21,6 +21,7 @@ namespace TarodevController
         public GameObject mapa;
         public GameObject infierno;
         public bool invencible = false;
+        public float timerInvencible = 5;
         public float timer = 5;
 
         #region Interface
@@ -58,8 +59,20 @@ namespace TarodevController
                     invencible = true;
                 }
             }
-            
 
+            if (invencible == true)
+            {
+                timerInvencible -= Time.deltaTime;
+
+                if (timerInvencible < 0)
+                {
+                    invencible = false;
+                    timerInvencible = 5;
+                    
+                }
+            }
+
+            
             GatherInput();
         }
 
@@ -122,7 +135,7 @@ namespace TarodevController
         {
             if (collision.collider.CompareTag("traps") && !invencible)
             {
-                collision.collider.enabled = false;
+                collision.collider.enabled = true;
                 if (infierno.activeSelf == true)
                 {
                     SceneManager.LoadScene(sceneName);
@@ -135,7 +148,7 @@ namespace TarodevController
                 }
                 
             }
-            else if (collision.collider.CompareTag("traps") && invencible)
+            else if (collision.collider.CompareTag("traps") && invencible || collision.collider.CompareTag("ground") && invencible)
             {
                 collision.collider.enabled = false;
 
