@@ -2608,7 +2608,7 @@ GameObject:
   - component: {fileID: 388424096}
   m_Layer: 0
   m_Name: TilemapTrapsTerrain
-  m_TagString: traps
+  m_TagString: ground2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11334,7 +11334,7 @@ GameObject:
   - component: {fileID: 1185757544}
   m_Layer: 0
   m_Name: TilemapTerrain
-  m_TagString: ground
+  m_TagString: ground2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
