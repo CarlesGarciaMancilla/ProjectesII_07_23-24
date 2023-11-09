@@ -11,16 +11,12 @@ public class Movement : MonoBehaviour
     
     public Speeds CurrentSpeed;
 
-    public GameObject player;
-    public GameObject mapa;
-    public GameObject infierno;
-
     float[] SpeedValues = { 5f, 10f, 15f, 20f, 0f };
     // Update is called once per frame
 
     private void Start()
     {
-        player = GameObject.Find("personaje");
+       
     }
     void Update()
     {

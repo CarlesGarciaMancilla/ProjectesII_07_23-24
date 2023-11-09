@@ -22,6 +22,7 @@ namespace TarodevController
         private string sceneName;
         public GameObject mapa;
         public GameObject infierno;
+
         public bool invencible = false;
         public float timerInvencible = 5;
         public float timer = 5;
@@ -42,7 +43,7 @@ namespace TarodevController
             _col = GetComponent<CapsuleCollider2D>();
             sceneName = SceneManager.GetActiveScene().name;
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
-            _frameInput = new FrameInput();            
+            _frameInput = new FrameInput();
             infierno.SetActive(false);
             timeText.enabled = false;
         }
@@ -120,7 +121,10 @@ namespace TarodevController
         private void ToInfierno(GameObject mapa, GameObject infierno)
         {
             mapa.SetActive(false);
+
+
             infierno.SetActive(true);
+
             timeText.enabled = true;
 
         }
@@ -128,7 +132,10 @@ namespace TarodevController
         private void ReturnToMap(GameObject mapa, GameObject infierno)
         {
             mapa.SetActive(true);
+
+
             infierno.SetActive(false);
+
             timeText.enabled = false;
 
         }
