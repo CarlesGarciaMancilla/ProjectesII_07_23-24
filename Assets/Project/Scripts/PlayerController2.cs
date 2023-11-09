@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.Video;
 
 namespace TarodevController
 {
@@ -14,8 +16,15 @@ namespace TarodevController
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
+
         public GameObject particles;
+        public Text timeText;
         private string sceneName;
+        public GameObject mapa;
+        public GameObject infierno;
+        public bool invencible = false;
+        public float timerInvencible = 5;
+        public float timer = 5;
 
         #region Interface
 
@@ -33,12 +42,42 @@ namespace TarodevController
             _col = GetComponent<CapsuleCollider2D>();
             sceneName = SceneManager.GetActiveScene().name;
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
-            _frameInput = new FrameInput();
+            _frameInput = new FrameInput();            
+            infierno.SetActive(false);
+            timeText.enabled = false;
         }
 
         private void Update()
         {
             _time += Time.deltaTime;
+
+            if (infierno.activeSelf == true) 
+            {
+             timer -= Time.deltaTime;
+             timeText.text = timer.ToString();
+
+                if (timer < 0)
+                {
+                    ReturnToMap(mapa, infierno);
+                    timer = 5;
+                    invencible = true;
+                }
+            }
+
+            if (invencible == true)
+            {
+                timerInvencible -= Time.deltaTime;
+
+                if (timerInvencible < 0)
+                {
+                    invencible = false;
+                    timerInvencible = 5;
+                    
+                }
+            }
+
+            
+
             GatherInput();
         }
 
@@ -47,7 +86,7 @@ namespace TarodevController
             _frameInput = new FrameInput
             {
                 JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
-                JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
+                //JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
               //  Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
             };
 
@@ -62,6 +101,7 @@ namespace TarodevController
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
                 particles.SetActive(false);
+                invencible = false;
             }
         }
 
@@ -77,6 +117,21 @@ namespace TarodevController
 
             ApplyMovement();
         }
+        private void ToInfierno(GameObject mapa, GameObject infierno)
+        {
+            mapa.SetActive(false);
+            infierno.SetActive(true);
+            timeText.enabled = true;
+
+        }
+
+        private void ReturnToMap(GameObject mapa, GameObject infierno)
+        {
+            mapa.SetActive(true);
+            infierno.SetActive(false);
+            timeText.enabled = false;
+
+        }
 
         #region Collisions
 
@@ -85,14 +140,31 @@ namespace TarodevController
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.collider.CompareTag("traps"))
+            if (collision.collider.CompareTag("traps") && !invencible)
             {
-                SceneManager.LoadScene(sceneName);
+                collision.collider.enabled = true;
+                if (infierno.activeSelf == true)
+                {
+                    SceneManager.LoadScene(sceneName);
+                    
+
+                }               
+                else
+                {
+                    ToInfierno(mapa, infierno);
+                }
+                
+            }
+            else if (collision.collider.CompareTag("traps") && invencible || collision.collider.CompareTag("ground") && invencible)
+            {
+                collision.collider.enabled = false;
+
             }
             else if (collision.collider.CompareTag("final"))
             {
                 SceneManager.LoadScene(sceneName);
             }
+            
         }
 
         private void CheckCollisions()
@@ -227,8 +299,8 @@ namespace TarodevController
         public Vector2 FrameInput { get; }
     }
 
-    
-        
+
+  
 
        
     
