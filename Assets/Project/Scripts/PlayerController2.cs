@@ -21,7 +21,10 @@ namespace TarodevController
         public Text timeText;
         private string sceneName;
         public GameObject mapa;
+        public GameObject sueloMapa;
+
         public GameObject infierno;
+        public GameObject sueloInfierno;
 
         public bool invencible = false;
         public float timerInvencible = 5;
@@ -45,6 +48,7 @@ namespace TarodevController
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
             _frameInput = new FrameInput();
             infierno.SetActive(false);
+            sueloInfierno.SetActive(false);
             timeText.enabled = false;
         }
 
@@ -77,7 +81,9 @@ namespace TarodevController
                 }
             }
 
-            
+        
+
+
 
             GatherInput();
         }
@@ -99,10 +105,11 @@ namespace TarodevController
 
             if (_frameInput.JumpDown)
             {
+                invencible = false;
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
                 particles.SetActive(false);
-                invencible = false;
+                
             }
         }
 
@@ -121,9 +128,10 @@ namespace TarodevController
         private void ToInfierno(GameObject mapa, GameObject infierno)
         {
             mapa.SetActive(false);
-
+            sueloMapa.SetActive(false);
 
             infierno.SetActive(true);
+            sueloInfierno.SetActive(true);
 
             timeText.enabled = true;
 
@@ -132,9 +140,10 @@ namespace TarodevController
         private void ReturnToMap(GameObject mapa, GameObject infierno)
         {
             mapa.SetActive(true);
-
+            sueloMapa.SetActive(true);
 
             infierno.SetActive(false);
+            sueloInfierno.SetActive(false);
 
             timeText.enabled = false;
 
