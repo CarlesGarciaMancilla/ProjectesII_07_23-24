@@ -26,9 +26,9 @@ namespace TarodevController
         public GameObject infierno;
         public GameObject sueloInfierno;
 
-        public bool invencible = false;
-        public float timerInvencible = 5;
-        public float timer = 5;
+        //public bool invencible = false;
+        //public float timerInvencible = 5;
+        //public float timer = 5;
 
         #region Interface
 
@@ -56,30 +56,30 @@ namespace TarodevController
         {
             _time += Time.deltaTime;
 
-            if (infierno.activeSelf == true) 
-            {
-             timer -= Time.deltaTime;
-             timeText.text = timer.ToString();
+            //if (infierno.activeSelf == true) 
+            //{
+            // timer -= Time.deltaTime;
+            // timeText.text = timer.ToString();
 
-                if (timer < 0)
-                {
-                    ReturnToMap(mapa, infierno);
-                    timer = 5;
-                    invencible = true;
-                }
-            }
+            //    if (timer < 0)
+            //    {
+            //        ReturnToMap(mapa, infierno);
+            //        timer = 5;
+            //        invencible = true;
+            //    }
+            //}
 
-            if (invencible == true)
-            {
-                timerInvencible -= Time.deltaTime;
+            //if (invencible == true)
+            //{
+            //    timerInvencible -= Time.deltaTime;
 
-                if (timerInvencible < 0)
-                {
-                    invencible = false;
-                    timerInvencible = 5;
+            //    if (timerInvencible < 0)
+            //    {
+            //        invencible = false;
+            //        timerInvencible = 5;
                     
-                }
-            }
+            //    }
+            //}
 
         
 
@@ -105,7 +105,7 @@ namespace TarodevController
 
             if (_frameInput.JumpDown)
             {
-                invencible = false;
+                //invencible = false;
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
                 particles.SetActive(false);
@@ -156,29 +156,42 @@ namespace TarodevController
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.collider.CompareTag("traps") && !invencible)
+            //if (collision.collider.CompareTag("traps") && !invencible)
+            //{
+            //    collision.collider.enabled = true;
+            //    if (infierno.activeSelf == true)
+            //    {
+            //        SceneManager.LoadScene(sceneName);
+
+
+            //    }               
+            //    else
+            //    {
+            //        ToInfierno(mapa, infierno);
+            //    }
+
+            //}
+            //else if (collision.collider.CompareTag("traps") && invencible || collision.collider.CompareTag("ground") && invencible)
+            //{
+            //    collision.collider.enabled = false;
+
+            //}
+            if (collision.collider.CompareTag("traps"))
             {
-                collision.collider.enabled = true;
                 if (infierno.activeSelf == true)
                 {
-                    SceneManager.LoadScene(sceneName);
-                    
+                    SceneManager.LoadScene("menu");
 
-                }               
+
+                }
                 else
                 {
                     ToInfierno(mapa, infierno);
                 }
-                
-            }
-            else if (collision.collider.CompareTag("traps") && invencible || collision.collider.CompareTag("ground") && invencible)
-            {
-                collision.collider.enabled = false;
-
             }
             else if (collision.collider.CompareTag("final"))
             {
-                SceneManager.LoadScene(sceneName);
+                SceneManager.LoadScene("menu");
             }
             
         }
