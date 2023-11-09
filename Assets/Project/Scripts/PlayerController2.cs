@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 namespace TarodevController
@@ -17,6 +18,7 @@ namespace TarodevController
         private bool _cachedQueryStartInColliders;
 
         public GameObject particles;
+        public Text timeText;
         private string sceneName;
         public GameObject mapa;
         public GameObject infierno;
@@ -40,8 +42,9 @@ namespace TarodevController
             _col = GetComponent<CapsuleCollider2D>();
             sceneName = SceneManager.GetActiveScene().name;
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
-            _frameInput = new FrameInput();
+            _frameInput = new FrameInput();            
             infierno.SetActive(false);
+            timeText.enabled = false;
         }
 
         private void Update()
@@ -50,7 +53,8 @@ namespace TarodevController
 
             if (infierno.activeSelf == true) 
             {
-            timer -= Time.deltaTime;
+             timer -= Time.deltaTime;
+             timeText.text = timer.ToString();
 
                 if (timer < 0)
                 {
@@ -73,6 +77,7 @@ namespace TarodevController
             }
 
             
+
             GatherInput();
         }
 
@@ -116,14 +121,16 @@ namespace TarodevController
         {
             mapa.SetActive(false);
             infierno.SetActive(true);
-           
+            timeText.enabled = true;
+
         }
 
         private void ReturnToMap(GameObject mapa, GameObject infierno)
         {
             mapa.SetActive(true);
             infierno.SetActive(false);
-           
+            timeText.enabled = false;
+
         }
 
         #region Collisions
