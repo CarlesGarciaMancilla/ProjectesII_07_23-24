@@ -18,18 +18,19 @@ namespace TarodevController
         private bool _cachedQueryStartInColliders;
 
         public GameObject particles;
-        public Text timeText;
         private string sceneName;
         public GameObject mapa;
         public GameObject sueloMapa;
-
+        public Slider timeSlider;
         public GameObject infierno;
         public GameObject sueloInfierno;
 
+
         public bool inferno = false;
+        public bool canInferno = false;
         //public bool invencible = false;
         //public float timerInvencible = 5;
-        //public float timer = 5;
+        public float timer = 5f;
 
         #region Interface
 
@@ -50,7 +51,6 @@ namespace TarodevController
             _frameInput = new FrameInput();
             infierno.SetActive(false);
             sueloInfierno.SetActive(false);
-            timeText.enabled = false;
         }
 
         private void Update()
@@ -61,6 +61,17 @@ namespace TarodevController
             if (inferno) 
             {
                 gameObject.transform.localScale = new Vector3(-1, 1, 1);
+            }
+
+            if (!inferno)
+            {
+                timer -= Time.deltaTime;
+                timeSlider.value = timer;
+            }
+
+            if (timer <= 0) 
+            {
+                canInferno = true;
             }
 
 
@@ -140,8 +151,7 @@ namespace TarodevController
 
             infierno.SetActive(true);
             sueloInfierno.SetActive(true);
-
-            timeText.enabled = true;
+            timeSlider.enabled = false;
             inferno = true;
 
         }
@@ -153,8 +163,9 @@ namespace TarodevController
 
             infierno.SetActive(false);
             sueloInfierno.SetActive(false);
+            timeSlider.enabled = true;
+            timer = 5f;
 
-            timeText.enabled = false;
 
         }
 
@@ -193,9 +204,13 @@ namespace TarodevController
 
 
                 }
-                else
+                else if(infierno.activeSelf == false && canInferno == true)
                 {
                     ToInfierno(mapa, infierno);
+                }
+                else 
+                {
+                    SceneManager.LoadScene(sceneName);
                 }
             }
             else if (collision.collider.CompareTag("final"))

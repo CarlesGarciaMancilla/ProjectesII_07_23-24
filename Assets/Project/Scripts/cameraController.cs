@@ -9,6 +9,9 @@ public class cameraController : MonoBehaviour
     public float xOffset = 0;
     public float yOffset = 0;
     public float zOffset = 0;
+    public float xOffsetI = 0;
+    public float yOffsetI = 0;
+    public float zOffsetI = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +29,10 @@ public class cameraController : MonoBehaviour
         if (target.transform.localScale == new Vector3(-1, 1, 1)) 
         {
             gameObject.transform.localRotation = Quaternion.Euler(0,0,180);
-            
+            this.transform.position = new Vector3(target.transform.position.x + xOffsetI,
+                                             target.transform.position.y + yOffsetI,
+                                             target.transform.position.z + zOffsetI);
+
         }
     }
 }
