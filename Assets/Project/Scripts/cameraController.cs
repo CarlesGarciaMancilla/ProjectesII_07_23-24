@@ -22,5 +22,11 @@ public class cameraController : MonoBehaviour
         this.transform.position = new Vector3(target.transform.position.x + xOffset,
                                               target.transform.position.y + yOffset,
                                               target.transform.position.z + zOffset);
+
+        if (target.transform.localScale == new Vector3(-1, 1, 1)) 
+        {
+            gameObject.transform.localRotation = Quaternion.Euler(0,0,180);
+            
+        }
     }
 }

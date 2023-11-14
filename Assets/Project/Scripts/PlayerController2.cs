@@ -26,6 +26,7 @@ namespace TarodevController
         public GameObject infierno;
         public GameObject sueloInfierno;
 
+        public bool inferno = false;
         //public bool invencible = false;
         //public float timerInvencible = 5;
         //public float timer = 5;
@@ -55,6 +56,13 @@ namespace TarodevController
         private void Update()
         {
             _time += Time.deltaTime;
+
+
+            if (inferno) 
+            {
+                gameObject.transform.localScale = new Vector3(-1, 1, 1);
+            }
+
 
             //if (infierno.activeSelf == true) 
             //{
@@ -134,6 +142,7 @@ namespace TarodevController
             sueloInfierno.SetActive(true);
 
             timeText.enabled = true;
+            inferno = true;
 
         }
 
