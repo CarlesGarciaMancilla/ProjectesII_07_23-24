@@ -22,17 +22,22 @@ public class cameraController : MonoBehaviour
 
     void Update()
     {
-        this.transform.position = new Vector3(target.transform.position.x + xOffset,
-                                              target.transform.position.y + yOffset,
-                                              target.transform.position.z + zOffset);
 
-        if (target.transform.localScale == new Vector3(-1, 1, 1)) 
+
+        if (target.transform.localScale == new Vector3(-1, 1, 1))
         {
-            gameObject.transform.localRotation = Quaternion.Euler(0,0,180);
+            gameObject.transform.localRotation = Quaternion.Euler(0, 0, 180);
             this.transform.position = new Vector3(target.transform.position.x + xOffsetI,
                                              target.transform.position.y + yOffsetI,
                                              target.transform.position.z + zOffsetI);
 
+        }
+        else if (target.transform.localScale == new Vector3(1, 1, 1))
+        {
+            gameObject.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            this.transform.position = new Vector3(target.transform.position.x + xOffset,
+                                              target.transform.position.y + yOffset,
+                                              target.transform.position.z + zOffset);
         }
     }
 }

@@ -8,6 +8,8 @@ TagManager:
   - ground
   - final
   - trueGround
+  - checkpoint
+  - checkpointInferno
   layers:
   - Default
   - TransparentFX

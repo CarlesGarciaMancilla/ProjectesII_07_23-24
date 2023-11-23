@@ -24,6 +24,8 @@ namespace TarodevController
         public Slider timeSlider;
         public GameObject infierno;
         public GameObject sueloInfierno;
+        public Vector3 respawnPosition;
+        public Vector3 respawnInfernoPosition;
 
 
         public bool inferno = false;
@@ -58,15 +60,16 @@ namespace TarodevController
             _time += Time.deltaTime;
 
 
-            if (inferno) 
+            if (infierno.activeSelf == true) 
             {
                 gameObject.transform.localScale = new Vector3(-1, 1, 1);
             }
 
-            if (!inferno)
+            if (infierno.activeSelf == false)
             {
                 timer -= Time.deltaTime;
                 timeSlider.value = timer;
+                gameObject.transform.localScale = new Vector3(1, 1, 1);
             }
 
             if (timer <= 0) 
@@ -152,7 +155,11 @@ namespace TarodevController
             infierno.SetActive(true);
             sueloInfierno.SetActive(true);
             timeSlider.enabled = false;
-            inferno = true;
+
+            if (respawnInfernoPosition != null)
+            {
+                gameObject.transform.localPosition = respawnInfernoPosition;
+            }
 
         }
 
@@ -160,12 +167,15 @@ namespace TarodevController
         {
             mapa.SetActive(true);
             sueloMapa.SetActive(true);
-
             infierno.SetActive(false);
             sueloInfierno.SetActive(false);
             timeSlider.enabled = true;
             timer = 5f;
-
+            if (respawnPosition != null) 
+            {
+                gameObject.transform.localPosition = respawnPosition;
+            }
+            
 
         }
 
@@ -200,8 +210,8 @@ namespace TarodevController
             {
                 if (infierno.activeSelf == true)
                 {
-                    SceneManager.LoadScene("menu");
-
+                    //SceneManager.LoadScene("menu");
+                    ReturnToMap(mapa, infierno);
 
                 }
                 else if(infierno.activeSelf == false && canInferno == true)
@@ -217,7 +227,15 @@ namespace TarodevController
             {
                 SceneManager.LoadScene("menu");
             }
-            
+            else if (collision.collider.CompareTag("checkpoint"))
+            {
+                respawnPosition = collision.collider.transform.position;
+            }
+            else if (collision.collider.CompareTag("checkpointInferno"))
+            {
+                respawnInfernoPosition = collision.collider.transform.position;
+            }
+
         }
 
         private void CheckCollisions()
