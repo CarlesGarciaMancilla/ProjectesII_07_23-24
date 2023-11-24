@@ -30,8 +30,9 @@ namespace TarodevController
 
         public bool inferno = false;
         public bool canInferno = false;
+        public bool canReturn = false;
         //public bool invencible = false;
-        //public float timerInvencible = 5;
+        public float timerInfierno = 5;
         public float timer = 5f;
 
         #region Interface
@@ -63,6 +64,9 @@ namespace TarodevController
 
             if (infierno.activeSelf == true) 
             {
+                
+                timerInfierno -= Time.deltaTime;
+                timeSlider.value = timerInfierno;
                 gameObject.transform.localScale = new Vector3(-1, 1, 1);
             }
 
@@ -78,10 +82,15 @@ namespace TarodevController
                 canInferno = true;
             }
 
+            if (timerInfierno <= 0)
+            {
+                canReturn = true;
+            }
 
-      
 
-        
+
+
+
 
 
 
@@ -129,7 +138,7 @@ namespace TarodevController
         {
             mapa.SetActive(false);
             sueloMapa.SetActive(false);
-
+            timerInfierno = 5f;
             infierno.SetActive(true);
             sueloInfierno.SetActive(true);
             timeSlider.enabled = false;
@@ -166,15 +175,18 @@ namespace TarodevController
           
             if (collision.collider.CompareTag("traps"))
             {
-                if (infierno.activeSelf == true)
+                if (mapa.activeSelf == false && canReturn == true)
                 {
-                    
+                    canReturn = false;
                     ReturnToMap(mapa, infierno);
+                    
 
                 }
                 else if(infierno.activeSelf == false && canInferno == true)
                 {
+                    canInferno = false;
                     ToInfierno(mapa, infierno);
+                    
                 }
                 else 
                 {
