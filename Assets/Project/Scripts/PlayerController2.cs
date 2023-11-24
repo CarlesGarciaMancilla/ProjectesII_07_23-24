@@ -24,8 +24,8 @@ namespace TarodevController
         public Slider timeSlider;
         public GameObject infierno;
         public GameObject sueloInfierno;
-        public Vector3 respawnPosition;
-        public Vector3 respawnInfernoPosition;
+        public InverseMapMovement inverseMovement;
+        public Movement movement;
 
 
         public bool inferno = false;
@@ -53,6 +53,7 @@ namespace TarodevController
             _frameInput = new FrameInput();
             infierno.SetActive(false);
             sueloInfierno.SetActive(false);
+            movement.enabled = false;
         }
 
         private void Update()
@@ -78,30 +79,7 @@ namespace TarodevController
             }
 
 
-            //if (infierno.activeSelf == true) 
-            //{
-            // timer -= Time.deltaTime;
-            // timeText.text = timer.ToString();
-
-            //    if (timer < 0)
-            //    {
-            //        ReturnToMap(mapa, infierno);
-            //        timer = 5;
-            //        invencible = true;
-            //    }
-            //}
-
-            //if (invencible == true)
-            //{
-            //    timerInvencible -= Time.deltaTime;
-
-            //    if (timerInvencible < 0)
-            //    {
-            //        invencible = false;
-            //        timerInvencible = 5;
-                    
-            //    }
-            //}
+      
 
         
 
@@ -155,11 +133,11 @@ namespace TarodevController
             infierno.SetActive(true);
             sueloInfierno.SetActive(true);
             timeSlider.enabled = false;
+            movement.enabled = true;
+            inverseMovement.enabled = false;
+            Respawn.instance.InfernoRespawn(gameObject);
+            
 
-            if (respawnInfernoPosition != null)
-            {
-                gameObject.transform.localPosition = respawnInfernoPosition;
-            }
 
         }
 
@@ -171,10 +149,9 @@ namespace TarodevController
             sueloInfierno.SetActive(false);
             timeSlider.enabled = true;
             timer = 5f;
-            if (respawnPosition != null) 
-            {
-                gameObject.transform.localPosition = respawnPosition;
-            }
+            movement.enabled = false;
+            inverseMovement.enabled = true;
+            Respawn.instance.NormalRespawn(gameObject);
             
 
         }
@@ -186,31 +163,12 @@ namespace TarodevController
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            //if (collision.collider.CompareTag("traps") && !invencible)
-            //{
-            //    collision.collider.enabled = true;
-            //    if (infierno.activeSelf == true)
-            //    {
-            //        SceneManager.LoadScene(sceneName);
-
-
-            //    }               
-            //    else
-            //    {
-            //        ToInfierno(mapa, infierno);
-            //    }
-
-            //}
-            //else if (collision.collider.CompareTag("traps") && invencible || collision.collider.CompareTag("ground") && invencible)
-            //{
-            //    collision.collider.enabled = false;
-
-            //}
+          
             if (collision.collider.CompareTag("traps"))
             {
                 if (infierno.activeSelf == true)
                 {
-                    //SceneManager.LoadScene("menu");
+                    
                     ReturnToMap(mapa, infierno);
 
                 }
@@ -229,11 +187,11 @@ namespace TarodevController
             }
             else if (collision.collider.CompareTag("checkpoint"))
             {
-                respawnPosition = collision.collider.transform.position;
+                Respawn.instance.respawnPosition = collision.collider.transform.position;
             }
             else if (collision.collider.CompareTag("checkpointInferno"))
             {
-                respawnInfernoPosition = collision.collider.transform.position;
+                Respawn.instance.respawnInfernoPosition = collision.collider.transform.position;
             }
 
         }
