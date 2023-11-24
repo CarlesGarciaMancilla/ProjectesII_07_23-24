@@ -23,7 +23,7 @@ public class slowmo : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            Time.timeScale = 0.25f;
+            Time.timeScale = 1.f;
         }
 
 
