@@ -187,11 +187,11 @@ namespace TarodevController
             }
             else if (collision.collider.CompareTag("checkpoint"))
             {
-                Respawn.instance.respawnPosition = collision.collider.transform.position;
+                Respawn.instance.respawnPosition = gameObject.transform.position;
             }
             else if (collision.collider.CompareTag("checkpointInferno"))
             {
-                Respawn.instance.respawnInfernoPosition = collision.collider.transform.position;
+                Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
             }
 
         }

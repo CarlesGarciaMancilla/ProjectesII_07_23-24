@@ -36,7 +36,7 @@ public class Respawn : MonoBehaviour
     {
         if (respawnInfernoPosition != null)
         {
-            player.transform.localPosition = respawnInfernoPosition;
+            player.transform.position = respawnInfernoPosition;
         }
     }
 
@@ -44,7 +44,7 @@ public class Respawn : MonoBehaviour
     {
         if (respawnPosition != null)
         {
-            player.transform.localPosition = respawnPosition;
+            player.transform.position = respawnPosition;
         }
     }
 }
