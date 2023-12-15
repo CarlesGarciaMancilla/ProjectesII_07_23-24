@@ -55,6 +55,7 @@ namespace TarodevController
             infierno.SetActive(false);
             sueloInfierno.SetActive(false);
             movement.enabled = false;
+            timeSlider.maxValue = 5f;
         }
 
         private void Update()
@@ -72,6 +73,7 @@ namespace TarodevController
 
             if (infierno.activeSelf == false)
             {
+                
                 timer -= Time.deltaTime;
                 timeSlider.value = timer;
                 gameObject.transform.localScale = new Vector3(1, 1, 1);
