@@ -85,6 +85,7 @@ namespace TarodevController
             if (timerInfierno <= 0)
             {
                 canReturn = true;
+                //ReturnToMap(mapa, infierno);
             }
 
 
