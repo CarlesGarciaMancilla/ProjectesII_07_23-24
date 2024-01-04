@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace TarodevController
 {
@@ -26,6 +28,23 @@ namespace TarodevController
         public GameObject sueloInfierno;
         public InverseMapMovement inverseMovement;
         public Movement movement;
+
+
+        //Dash
+
+        [SerializeField] private float dashDistance = 5f; // Distancia que el dash debería recorrer
+        private Vector2 dashStartPos;
+        private float dashTravelledDistance;
+
+
+        [SerializeField] private float dashSpeed = 10f; // Velocidad del dash
+        
+
+        private bool isTouchingDashTrigger = false;
+        private bool isDashing = false;
+        private float dashTimeLeft;
+        
+
 
 
         public bool inferno = false;
@@ -92,7 +111,10 @@ namespace TarodevController
 
 
 
-
+           if (isTouchingDashTrigger && Input.GetMouseButtonDown(1) && !isDashing)
+{
+    StartDash();
+}
 
 
 
@@ -127,15 +149,25 @@ namespace TarodevController
 
         private void FixedUpdate()
         {
-            CheckCollisions();
-            Debug.Log("Ground Hit: " + groundHit);
-            Debug.Log("Ceiling Hit: " + ceilingHit);
+          
+            
+          
 
-            HandleJump();
-            HandleDirection();
-            HandleGravity();
+            if (isDashing)
+            {
+                ContinueDash();
+            }
+            else
+            {
+                CheckCollisions();
+                Debug.Log("Ground Hit: " + groundHit);
+                Debug.Log("Ceiling Hit: " + ceilingHit);
 
-            ApplyMovement();
+                HandleJump();
+                HandleDirection();
+                HandleGravity();
+                ApplyMovement();
+            }
         }
         private void ToInfierno(GameObject mapa, GameObject infierno)
         {
@@ -243,6 +275,60 @@ namespace TarodevController
 
             Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
         }
+
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("dash"))
+            {
+                isTouchingDashTrigger = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.CompareTag("dash"))
+            {
+                isTouchingDashTrigger = false;
+            }
+        }
+
+        private void StartDash()
+        {
+            isDashing = true;
+            dashStartPos = transform.position; // Almacenar la posición inicial del dash
+            dashTravelledDistance = 0f;
+            _rb.gravityScale = 0; // Desactivar la gravedad durante el dash
+            _rb.velocity = new Vector2(transform.right.x * dashSpeed, 0); // Establecer velocidad de dash
+        }
+
+        private void ContinueDash()
+        {
+            if (isDashing)
+            {
+                // Calcular la distancia recorrida desde el inicio del dash
+                dashTravelledDistance = Vector2.Distance(dashStartPos, transform.position);
+
+                if (dashTravelledDistance < dashDistance)
+                {
+                    // El movimiento se controla mediante la velocidad establecida en StartDash
+                }
+                else
+                {
+                    EndDash();
+                }
+            }
+        }
+
+        private void EndDash()
+        {
+            isDashing = false;
+            _rb.gravityScale = 1; // Restaurar la gravedad
+                                  // Restablecer la velocidad horizontal y vertical a los valores previos al dash
+            _rb.velocity = new Vector2(0, _rb.velocity.y);
+        }
+
+
 
         #endregion
 

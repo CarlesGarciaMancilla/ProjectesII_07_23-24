@@ -10,6 +10,7 @@ TagManager:
   - trueGround
   - checkpoint
   - checkpointInferno
+  - dash
   layers:
   - Default
   - TransparentFX
