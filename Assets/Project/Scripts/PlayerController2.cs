@@ -112,9 +112,9 @@ namespace TarodevController
 
 
            if (isTouchingDashTrigger && Input.GetMouseButtonDown(1) && !isDashing)
-{
-    StartDash();
-}
+            {
+            StartDash();
+            }
 
 
 
@@ -126,7 +126,7 @@ namespace TarodevController
         {
             _frameInput = new FrameInput
             {
-                JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
+                JumpDown = Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.C),
                 //JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
               //  Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
             };
