@@ -26,6 +26,9 @@ namespace TarodevController
         public GameObject sueloInfierno;
         public InverseMapMovement inverseMovement;
         public Movement movement;
+        public AudioSource audioTp;
+        public AudioSource audioDeath;
+        private Vector3 position;
 
 
         public bool inferno = false;
@@ -61,6 +64,10 @@ namespace TarodevController
         private void Update()
         {
             _time += Time.deltaTime;
+            //position = transform.position;
+
+
+
 
 
             if (infierno.activeSelf == true) 
@@ -125,8 +132,33 @@ namespace TarodevController
             }
         }
 
+        private void LateUpdate()
+        {
+            //Debug.Log("transform vector " + Round(transform.position));
+            //Debug.Log("position vector " + Round(position));
+
+            //if (Round(transform.position) == Round(position))
+            //{
+            //    if (canInferno)
+            //    {
+            //        ToInfierno(mapa, infierno);
+
+            //    }
+            //    else if (canReturn)
+            //    {
+            //        ReturnToMap(mapa, infierno);
+            //    }
+                
+                    
+            //}
+        }
+
         private void FixedUpdate()
         {
+            
+            
+
+
             CheckCollisions();
             Debug.Log("Ground Hit: " + groundHit);
             Debug.Log("Ceiling Hit: " + ceilingHit);
@@ -137,8 +169,19 @@ namespace TarodevController
 
             ApplyMovement();
         }
+
+        public static Vector3 Round(Vector3 vector3)
+        {
+            
+            return new Vector3(
+                Mathf.Round(vector3.x),
+                Mathf.Round(vector3.y),
+                Mathf.Round(vector3.z));
+        }
+
         private void ToInfierno(GameObject mapa, GameObject infierno)
         {
+            audioTp.Play();
             mapa.SetActive(false);
             sueloMapa.SetActive(false);
             timerInfierno = 5f;
@@ -155,6 +198,7 @@ namespace TarodevController
 
         private void ReturnToMap(GameObject mapa, GameObject infierno)
         {
+            audioTp.Play();
             mapa.SetActive(true);
             sueloMapa.SetActive(true);
             infierno.SetActive(false);
@@ -193,6 +237,7 @@ namespace TarodevController
                 }
                 else 
                 {
+                    audioDeath.Play();
                     SceneManager.LoadScene(sceneName);
                 }
             }
