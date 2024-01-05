@@ -86,7 +86,10 @@ namespace TarodevController
             _time += Time.deltaTime;
             //position = transform.position;
 
-
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene("menu");
+            }
 
 
 

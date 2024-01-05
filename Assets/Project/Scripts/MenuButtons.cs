@@ -37,6 +37,9 @@ public class MenuButtons : MonoBehaviour
                 canvasOptions.SetActive(true);
                 canvasLevels.SetActive(false);
                 break;
+            case "menu":
+                SceneManager.LoadScene("menu");
+                break;
             case "back":
                 canvasTitle.SetActive(true);
                 canvasOptions.SetActive(false);
