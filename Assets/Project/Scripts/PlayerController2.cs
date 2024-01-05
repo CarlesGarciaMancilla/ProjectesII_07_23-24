@@ -22,10 +22,11 @@ namespace TarodevController
         public GameObject particles;
         private string sceneName;
         public GameObject mapa;
-        public GameObject sueloMapa;
+        public GameObject fondoMapa;
+        public GameObject fondoInfierno;
+        public GameObject nubes;
         public Slider timeSlider;
-        public GameObject infierno;
-        public GameObject sueloInfierno;
+        public GameObject infierno;       
         public InverseMapMovement inverseMovement;
         public Movement movement;
         public AudioSource audioTp;
@@ -75,7 +76,7 @@ namespace TarodevController
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
             _frameInput = new FrameInput();
             infierno.SetActive(false);
-            sueloInfierno.SetActive(false);
+            fondoInfierno.SetActive(false);
             movement.enabled = false;
             timeSlider.maxValue = 5f;
         }
@@ -211,10 +212,11 @@ namespace TarodevController
         {
             audioTp.Play();
             mapa.SetActive(false);
-            sueloMapa.SetActive(false);
+            fondoMapa.SetActive(false);
+            nubes.SetActive(false);
             timerInfierno = 5f;
             infierno.SetActive(true);
-            sueloInfierno.SetActive(true);
+            fondoInfierno.SetActive(true);
             timeSlider.enabled = false;
             movement.enabled = true;
             inverseMovement.enabled = false;
@@ -228,9 +230,10 @@ namespace TarodevController
         {
             audioTp.Play();
             mapa.SetActive(true);
-            sueloMapa.SetActive(true);
+            fondoMapa.SetActive(true);
+            nubes.SetActive(true);
             infierno.SetActive(false);
-            sueloInfierno.SetActive(false);
+            fondoInfierno.SetActive(false);
             timeSlider.enabled = true;
             timer = 5f;
             movement.enabled = false;
