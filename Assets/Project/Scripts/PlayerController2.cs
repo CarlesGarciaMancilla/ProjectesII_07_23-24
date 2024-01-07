@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace TarodevController
 {
@@ -12,23 +14,49 @@ namespace TarodevController
     {
         [SerializeField] private ScriptableStats _stats;
         private Rigidbody2D _rb;
-        private CapsuleCollider2D _col;
+        private BoxCollider2D _col;
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
 
         public GameObject particles;
-        public Text timeText;
         private string sceneName;
         public GameObject mapa;
-        public GameObject sueloMapa;
+        public GameObject fondoMapa;
+        public GameObject fondoInfierno;
+        public GameObject nubes;
+        public Slider timeSlider;
+        public GameObject infierno;       
+        public InverseMapMovement inverseMovement;
+        public Movement movement;
+        public AudioSource audioTp;
+        public AudioSource audioDeath;
+        private Vector3 position;
 
-        public GameObject infierno;
-        public GameObject sueloInfierno;
 
+        //Dash
+
+        [SerializeField] private float dashDistance = 5f; // Distancia que el dash deber�a recorrer
+        private Vector2 dashStartPos;
+        private float dashTravelledDistance;
+
+
+        [SerializeField] private float dashSpeed = 10f; // Velocidad del dash
+        
+
+        private bool isTouchingDashTrigger = false;
+        private bool isDashing = false;
+        private float dashTimeLeft;
+        
+
+
+
+        public bool inferno = false;
+        public bool canInferno = false;
+        public bool canReturn = false;
         //public bool invencible = false;
-        //public float timerInvencible = 5;
-        //public float timer = 5;
+        public float timerInfierno = 5;
+        public float timer = 5f;
 
         #region Interface
 
@@ -43,45 +71,62 @@ namespace TarodevController
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
-            _col = GetComponent<CapsuleCollider2D>();
+            _col = GetComponent<BoxCollider2D>(); // Cambiado de CapsuleCollider2D a BoxCollider2D
             sceneName = SceneManager.GetActiveScene().name;
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
             _frameInput = new FrameInput();
             infierno.SetActive(false);
-            sueloInfierno.SetActive(false);
-            timeText.enabled = false;
+            fondoInfierno.SetActive(false);
+            movement.enabled = false;
+            timeSlider.maxValue = 5f;
         }
 
         private void Update()
         {
             _time += Time.deltaTime;
+            //position = transform.position;
 
-            //if (infierno.activeSelf == true) 
-            //{
-            // timer -= Time.deltaTime;
-            // timeText.text = timer.ToString();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SceneManager.LoadScene("menu");
+            }
 
-            //    if (timer < 0)
-            //    {
-            //        ReturnToMap(mapa, infierno);
-            //        timer = 5;
-            //        invencible = true;
-            //    }
-            //}
 
-            //if (invencible == true)
-            //{
-            //    timerInvencible -= Time.deltaTime;
 
-            //    if (timerInvencible < 0)
-            //    {
-            //        invencible = false;
-            //        timerInvencible = 5;
-                    
-            //    }
-            //}
+            if (infierno.activeSelf == true) 
+            {
+                
+                timerInfierno -= Time.deltaTime;
+                timeSlider.value = timerInfierno;
+                gameObject.transform.localScale = new Vector3(-1, 1, 1);
+            }
 
-        
+            if (infierno.activeSelf == false)
+            {
+                
+                timer -= Time.deltaTime;
+                timeSlider.value = timer;
+                gameObject.transform.localScale = new Vector3(1, 1, 1);
+            }
+
+            if (timer <= 0) 
+            {
+                canInferno = true;
+            }
+
+            if (timerInfierno <= 0)
+            {
+                canReturn = true;
+                //ReturnToMap(mapa, infierno);
+            }
+
+
+
+           if (isTouchingDashTrigger && Input.GetMouseButtonDown(1) && !isDashing)
+            {
+            StartDash();
+            }
+
 
 
 
@@ -92,7 +137,7 @@ namespace TarodevController
         {
             _frameInput = new FrameInput
             {
-                JumpDown = Input.GetButtonDown("Jump") || Input.GetKeyDown(KeyCode.C),
+                JumpDown = Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.C),
                 //JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
               //  Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
             };
@@ -113,39 +158,91 @@ namespace TarodevController
             }
         }
 
+        private void LateUpdate()
+        {
+            //Debug.Log("transform vector " + Round(transform.position));
+            //Debug.Log("position vector " + Round(position));
+
+            //if (Round(transform.position) == Round(position))
+            //{
+            //    if (canInferno)
+            //    {
+            //        ToInfierno(mapa, infierno);
+
+            //    }
+            //    else if (canReturn)
+            //    {
+            //        ReturnToMap(mapa, infierno);
+            //    }
+                
+                    
+            //}
+        }
+
         private void FixedUpdate()
         {
-            CheckCollisions();
-            Debug.Log("Ground Hit: " + groundHit);
-            Debug.Log("Ceiling Hit: " + ceilingHit);
+          
+            
+          
 
-            HandleJump();
-            HandleDirection();
-            HandleGravity();
+            if (isDashing)
+            {
+                ContinueDash();
+            }
+            else
+            {
+                CheckCollisions();
+                Debug.Log("Ground Hit: " + groundHit);
+                Debug.Log("Ceiling Hit: " + ceilingHit);
 
-            ApplyMovement();
+                HandleJump();
+                HandleDirection();
+                HandleGravity();
+                ApplyMovement();
+            }
         }
+
+        public static Vector3 Round(Vector3 vector3)
+        {
+            
+            return new Vector3(
+                Mathf.Round(vector3.x),
+                Mathf.Round(vector3.y),
+                Mathf.Round(vector3.z));
+        }
+
         private void ToInfierno(GameObject mapa, GameObject infierno)
         {
+            audioTp.Play();
             mapa.SetActive(false);
-            sueloMapa.SetActive(false);
-
+            fondoMapa.SetActive(false);
+            nubes.SetActive(false);
+            timerInfierno = 5f;
             infierno.SetActive(true);
-            sueloInfierno.SetActive(true);
+            fondoInfierno.SetActive(true);
+            timeSlider.enabled = false;
+            movement.enabled = true;
+            inverseMovement.enabled = false;
+            Respawn.instance.InfernoRespawn(gameObject);
+            
 
-            timeText.enabled = true;
 
         }
 
         private void ReturnToMap(GameObject mapa, GameObject infierno)
         {
+            audioTp.Play();
             mapa.SetActive(true);
-            sueloMapa.SetActive(true);
-
+            fondoMapa.SetActive(true);
+            nubes.SetActive(true);
             infierno.SetActive(false);
-            sueloInfierno.SetActive(false);
-
-            timeText.enabled = false;
+            fondoInfierno.SetActive(false);
+            timeSlider.enabled = true;
+            timer = 5f;
+            movement.enabled = false;
+            inverseMovement.enabled = true;
+            Respawn.instance.NormalRespawn(gameObject);
+            
 
         }
 
@@ -156,54 +253,51 @@ namespace TarodevController
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            //if (collision.collider.CompareTag("traps") && !invencible)
-            //{
-            //    collision.collider.enabled = true;
-            //    if (infierno.activeSelf == true)
-            //    {
-            //        SceneManager.LoadScene(sceneName);
-
-
-            //    }               
-            //    else
-            //    {
-            //        ToInfierno(mapa, infierno);
-            //    }
-
-            //}
-            //else if (collision.collider.CompareTag("traps") && invencible || collision.collider.CompareTag("ground") && invencible)
-            //{
-            //    collision.collider.enabled = false;
-
-            //}
+          
             if (collision.collider.CompareTag("traps"))
             {
-                if (infierno.activeSelf == true)
+                if (mapa.activeSelf == false && canReturn == true)
                 {
-                    SceneManager.LoadScene("menu");
-
+                    canReturn = false;
+                    ReturnToMap(mapa, infierno);
+                    
 
                 }
-                else
+                else if(infierno.activeSelf == false && canInferno == true)
                 {
+                    canInferno = false;
                     ToInfierno(mapa, infierno);
+                    
+                }
+                else 
+                {
+                    audioDeath.Play();
+                    SceneManager.LoadScene(sceneName);
                 }
             }
             else if (collision.collider.CompareTag("final"))
             {
                 SceneManager.LoadScene("menu");
             }
-            
+            else if (collision.collider.CompareTag("checkpoint"))
+            {
+                Respawn.instance.respawnPosition = gameObject.transform.position;
+            }
+            else if (collision.collider.CompareTag("checkpointInferno"))
+            {
+                Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
+            }
+
         }
 
         private void CheckCollisions()
         {
             Physics2D.queriesStartInColliders = false;
 
-           
+
             // Ground and Ceiling
-            bool groundHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
-            bool ceilingHit = Physics2D.CapsuleCast(_col.bounds.center, _col.size, _col.direction, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
+            bool groundHit = Physics2D.BoxCast(_col.bounds.center, _col.bounds.size, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
+            bool ceilingHit = Physics2D.BoxCast(_col.bounds.center, _col.bounds.size, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
 
             // Hit a Ceiling
             if (ceilingHit) _frameVelocity.y = Mathf.Min(0, _frameVelocity.y);
@@ -228,6 +322,60 @@ namespace TarodevController
 
             Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
         }
+
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.CompareTag("dash"))
+            {
+                isTouchingDashTrigger = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D other)
+        {
+            if (other.CompareTag("dash"))
+            {
+                isTouchingDashTrigger = false;
+            }
+        }
+
+        private void StartDash()
+        {
+            isDashing = true;
+            dashStartPos = transform.position; // Almacenar la posici�n inicial del dash
+            dashTravelledDistance = 0f;
+            _rb.gravityScale = 0; // Desactivar la gravedad durante el dash
+            _rb.velocity = new Vector2(transform.right.x * dashSpeed, 0); // Establecer velocidad de dash
+        }
+
+        private void ContinueDash()
+        {
+            if (isDashing)
+            {
+                // Calcular la distancia recorrida desde el inicio del dash
+                dashTravelledDistance = Vector2.Distance(dashStartPos, transform.position);
+
+                if (dashTravelledDistance < dashDistance)
+                {
+                    // El movimiento se controla mediante la velocidad establecida en StartDash
+                }
+                else
+                {
+                    EndDash();
+                }
+            }
+        }
+
+        private void EndDash()
+        {
+            isDashing = false;
+            _rb.gravityScale = 1; // Restaurar la gravedad
+                                  // Restablecer la velocidad horizontal y vertical a los valores previos al dash
+            _rb.velocity = new Vector2(0, _rb.velocity.y);
+        }
+
+
 
         #endregion
 

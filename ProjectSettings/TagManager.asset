@@ -8,6 +8,9 @@ TagManager:
   - ground
   - final
   - trueGround
+  - checkpoint
+  - checkpointInferno
+  - dash
   layers:
   - Default
   - TransparentFX
