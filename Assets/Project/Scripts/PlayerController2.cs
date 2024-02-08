@@ -272,6 +272,7 @@ namespace TarodevController
                 else 
                 {
                     audioDeath.Play();
+                    Respawn.instance.RestartLevel();
                     SceneManager.LoadScene(sceneName);
                 }
             }
