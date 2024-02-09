@@ -277,15 +277,7 @@ namespace TarodevController
           
             if (collision.collider.CompareTag("traps"))
             {
-                if (mapa.activeSelf == false)
-                {
-                    StartCoroutine(FadeInTierra());
-                    canReturn = false;
-
-
-
-                }
-                else if (infierno.activeSelf == false && canInferno == true)
+                 if (infierno.activeSelf == false && canInferno == true)
                 {
 
                     StartCoroutine(FadeInInfierno());
@@ -297,7 +289,7 @@ namespace TarodevController
                 {
                     StartCoroutine(Muerte());
                 }
-                else if (mapa.activeSelf == true && canInferno == false) 
+                else if (infierno.activeSelf == true) 
                 {
                     StartCoroutine(Muerte());
                 }
