@@ -32,7 +32,7 @@ namespace TarodevController
         public AudioSource audioTp;
         public AudioSource audioDeath;
         private Vector3 position;
-
+        public Image panel;
 
         //Dash
 
@@ -55,7 +55,6 @@ namespace TarodevController
         public bool canInferno = false;
         public bool canReturn = false;
         //public bool invencible = false;
-        public float timerInfierno = 5;
         public float timer = 5f;
 
         #region Interface
@@ -94,10 +93,7 @@ namespace TarodevController
 
 
             if (infierno.activeSelf == true) 
-            {
-                
-                timerInfierno -= Time.deltaTime;
-                timeSlider.value = timerInfierno;
+            {               
                 gameObject.transform.localScale = new Vector3(-1, 1, 1);
             }
 
@@ -114,11 +110,11 @@ namespace TarodevController
                 canInferno = true;
             }
 
-            if (timerInfierno <= 0)
-            {
-                canReturn = true;
-                //ReturnToMap(mapa, infierno);
-            }
+            //if (timerInfierno <= 0)
+            //{
+            //    canReturn = true;
+            //    //ReturnToMap(mapa, infierno);
+            //}
 
 
 
@@ -213,14 +209,13 @@ namespace TarodevController
 
         private void ToInfierno(GameObject mapa, GameObject infierno)
         {
+            panel.CrossFadeAlpha(0, 0.5f, false);
             audioTp.Play();
             mapa.SetActive(false);
             fondoMapa.SetActive(false);
             nubes.SetActive(false);
-            timerInfierno = 5f;
             infierno.SetActive(true);
             fondoInfierno.SetActive(true);
-            timeSlider.enabled = false;
             movement.enabled = true;
             inverseMovement.enabled = false;
             Respawn.instance.InfernoRespawn(gameObject);
@@ -231,6 +226,7 @@ namespace TarodevController
 
         private void ReturnToMap(GameObject mapa, GameObject infierno)
         {
+            panel.CrossFadeAlpha(0, 0.5f, false);
             audioTp.Play();
             mapa.SetActive(true);
             fondoMapa.SetActive(true);
@@ -246,6 +242,20 @@ namespace TarodevController
 
         }
 
+        public IEnumerator FadeInInfierno()
+        {
+            panel.CrossFadeAlpha(1, 0.1f, false);
+            yield return new WaitForSeconds(1);
+            ToInfierno(mapa, infierno);
+        }
+
+        public IEnumerator FadeInTierra()
+        {
+            panel.CrossFadeAlpha(1, 0.1f, false);
+            yield return new WaitForSeconds(1);
+            ReturnToMap(mapa, infierno);
+        }
+
         #region Collisions
 
         private float _frameLeftGrounded = float.MinValue;
@@ -256,22 +266,26 @@ namespace TarodevController
           
             if (collision.collider.CompareTag("traps"))
             {
-                if (mapa.activeSelf == false && canReturn == true)
+                if (mapa.activeSelf == false)
                 {
+                    StartCoroutine(FadeInTierra());
                     canReturn = false;
-                    ReturnToMap(mapa, infierno);
+                    
                     
 
                 }
                 else if(infierno.activeSelf == false && canInferno == true)
                 {
+
+                    StartCoroutine(FadeInInfierno());
                     canInferno = false;
-                    ToInfierno(mapa, infierno);
+                    
                     
                 }
                 else 
                 {
                     audioDeath.Play();
+                    Respawn.instance.RestartLevel();
                     SceneManager.LoadScene(sceneName);
                 }
             }
@@ -286,6 +300,7 @@ namespace TarodevController
             else if (collision.collider.CompareTag("checkpointInferno"))
             {
                 Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
+                ReturnToMap(mapa, infierno);
             }
 
         }
@@ -476,9 +491,12 @@ namespace TarodevController
         public Vector2 FrameInput { get; }
     }
 
-
-  
-
-       
     
+
+
+
+
+
+
+
 }
