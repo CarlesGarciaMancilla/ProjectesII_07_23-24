@@ -33,6 +33,7 @@ namespace TarodevController
         public AudioSource audioDeath;
         private Vector3 position;
         public Image panel;
+        public ParticleSystem muerteParticle;
 
         //Dash
 
@@ -255,6 +256,16 @@ namespace TarodevController
             yield return new WaitForSeconds(1);
             ReturnToMap(mapa, infierno);
         }
+        public IEnumerator Muerte()
+        {
+            audioDeath.Play();
+            muerteParticle.Play();
+            yield return new WaitForSeconds(0.3f);
+            panel.CrossFadeAlpha(1, 0.05f, false);
+            yield return new WaitForSeconds(0.5f);      
+            Respawn.instance.RestartLevel();
+            SceneManager.LoadScene(sceneName);
+        }
 
         #region Collisions
 
@@ -270,24 +281,27 @@ namespace TarodevController
                 {
                     StartCoroutine(FadeInTierra());
                     canReturn = false;
-                    
-                    
+
+
 
                 }
-                else if(infierno.activeSelf == false && canInferno == true)
+                else if (infierno.activeSelf == false && canInferno == true)
                 {
 
                     StartCoroutine(FadeInInfierno());
                     canInferno = false;
-                    
-                    
+
+
                 }
-                else 
+                else if (mapa.activeSelf == true && canInferno == false)
                 {
-                    audioDeath.Play();
-                    Respawn.instance.RestartLevel();
-                    SceneManager.LoadScene(sceneName);
+                    StartCoroutine(Muerte());
                 }
+                else if (mapa.activeSelf == true && canInferno == false) 
+                {
+                    StartCoroutine(Muerte());
+                }
+             
             }
             else if (collision.collider.CompareTag("final"))
             {
@@ -300,7 +314,7 @@ namespace TarodevController
             else if (collision.collider.CompareTag("checkpointInferno"))
             {
                 Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
-                ReturnToMap(mapa, infierno);
+                StartCoroutine(FadeInTierra());
             }
 
         }
