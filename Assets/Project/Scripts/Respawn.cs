@@ -17,6 +17,7 @@ public class Respawn : MonoBehaviour
             DontDestroyOnLoad(this);
         }
         
+        
     }
 
     // Start is called before the first frame update
@@ -46,5 +47,12 @@ public class Respawn : MonoBehaviour
         {
             player.transform.position = respawnPosition;
         }
+    }
+
+    public void RestartLevel() 
+    {
+        respawnPosition = new Vector3(0, 0, 0);
+        respawnInfernoPosition = new Vector3(0, 0, 0);
+
     }
 }
