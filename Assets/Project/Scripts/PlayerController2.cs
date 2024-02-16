@@ -216,6 +216,7 @@ namespace TarodevController
             fondoMapa.SetActive(false);
             nubes.SetActive(false);
             infierno.SetActive(true);
+            canInferno = false;
             fondoInfierno.SetActive(true);
             movement.enabled = true;
             inverseMovement.enabled = false;
@@ -305,9 +306,8 @@ namespace TarodevController
             }
             else if (collision.collider.CompareTag("checkpointInferno"))
             {
-                Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
                 collision.collider.enabled = false;
-                canInferno=false;
+                Respawn.instance.respawnInfernoPosition = gameObject.transform.position;             
                 StartCoroutine(FadeInTierra());
             }
 
