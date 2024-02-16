@@ -306,6 +306,7 @@ namespace TarodevController
             else if (collision.collider.CompareTag("checkpointInferno"))
             {
                 Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
+                collision.collider.enabled = false;
                 canInferno=false;
                 StartCoroutine(FadeInTierra());
             }
