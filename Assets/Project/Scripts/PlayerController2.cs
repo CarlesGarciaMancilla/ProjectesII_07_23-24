@@ -78,7 +78,9 @@ namespace TarodevController
             infierno.SetActive(false);
             fondoInfierno.SetActive(false);
             movement.enabled = false;
+            inverseMovement.enabled = false;
             timeSlider.maxValue = 5f;
+
         }
 
         private void Update()
@@ -89,6 +91,10 @@ namespace TarodevController
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 SceneManager.LoadScene("menu");
+            }
+            else if (inverseMovement.enabled == false && Input.GetMouseButtonDown(0) && mapa.activeSelf ==true) 
+            {
+                inverseMovement.enabled = true;
             }
 
 
