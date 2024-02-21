@@ -4,32 +4,45 @@ using UnityEngine;
 
 public class TimeEnemies : MonoBehaviour
 {
-    public Animation[] enemies;
-    public GameObject player;
+    public GameObject[] enemies;
+    public Animator[] enemiesAnimator;
+    public Movement movementScript;
+    public InverseMapMovement inverseMapMovement;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (player.transform.position == new Vector3(0, 0, 0))
+        
+
+        for (int i = 0; i < enemies.Length; i++)
         {
-            for (int i = 0; i <= enemies.Length - 1; i++) 
-            {
-                enemies[i].Stop();
-            }
-            
+            Debug.Log("enemigoAnimator");
+            enemiesAnimator[i] = enemies[i].GetComponent<Animator>();
         }
-        else 
-        {
-            for (int i = 0; i <= enemies.Length - 1; i++)
-            {
-                enemies[i].Play();
-            }
-        }
+
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (movementScript.enabled == false && inverseMapMovement.enabled == false)
+        {
+
+            for (int i = 0; i < enemiesAnimator.Length; i++)
+            {
+                enemiesAnimator[i].enabled = false;
+            }
+
+        }
+        else
+        {
+            for (int i = 0; i < enemiesAnimator.Length; i++)
+            {
+                enemiesAnimator[i].enabled = true;
+            }
+        }
     }
 }
+

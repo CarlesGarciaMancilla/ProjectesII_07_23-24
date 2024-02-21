@@ -85,6 +85,8 @@ namespace TarodevController
 
         private void Update()
         {
+
+
             _time += Time.deltaTime;
             //position = transform.position;
 
@@ -106,8 +108,13 @@ namespace TarodevController
 
             if (infierno.activeSelf == false)
             {
-                
-                timer -= Time.deltaTime;
+                if (movement.enabled == false && inverseMovement.enabled == false)
+                {
+                    timer = timeSlider.maxValue;
+                }
+                else
+                    timer -= Time.deltaTime;
+
                 timeSlider.value = timer;
                 gameObject.transform.localScale = new Vector3(1, 1, 1);
             }
