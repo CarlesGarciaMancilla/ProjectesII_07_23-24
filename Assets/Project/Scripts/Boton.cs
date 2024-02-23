@@ -28,6 +28,7 @@ public class Boton : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player")) 
         {
+            
             Debug.Log("checkBoton");
             platform.SetActive(true);
             botonActivo.SetActive(true);
