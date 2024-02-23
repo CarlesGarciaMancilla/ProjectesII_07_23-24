@@ -48,7 +48,9 @@ namespace TarodevController
         private bool isTouchingDashTrigger = false;
         private bool isDashing = false;
         private float dashTimeLeft;
-        
+
+        //water
+        private bool isInWater = false; // Variable para rastrear si el jugador está en el agua
 
 
 
@@ -138,7 +140,7 @@ namespace TarodevController
             }
 
 
-
+            HandleJump();
 
             GatherInput();
         }
@@ -366,6 +368,10 @@ namespace TarodevController
             {
                 isTouchingDashTrigger = true;
             }
+            if (other.CompareTag("Water"))
+            {
+                isInWater = true;
+            }
         }
 
         private void OnTriggerExit2D(Collider2D other)
@@ -373,6 +379,10 @@ namespace TarodevController
             if (other.CompareTag("dash"))
             {
                 isTouchingDashTrigger = false;
+            }
+            if (other.CompareTag("Water"))
+            {
+                isInWater = false;
             }
         }
 
@@ -435,7 +445,10 @@ namespace TarodevController
 
             if (!_jumpToConsume && !HasBufferedJump) return;
 
-            if (_grounded || CanUseCoyote) ExecuteJump();
+            // Si el jugador está en el agua y se presiona el botón de salto, ejecutar el salto
+           
+
+            if (_grounded || CanUseCoyote || isInWater) ExecuteJump();
 
             _jumpToConsume = false;
         }
@@ -448,6 +461,7 @@ namespace TarodevController
             _coyoteUsable = false;
             _frameVelocity.y = _stats.JumpPower;
             Jumped?.Invoke();
+            Debug.Log("Jumping!");
         }
 
         #endregion
