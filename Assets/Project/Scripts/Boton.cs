@@ -24,10 +24,11 @@ public class Boton : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag("traps")) 
+        if (collision.collider.CompareTag("Player")) 
         {
+            Debug.Log("checkBoton");
             platform.SetActive(true);
             botonActivo.SetActive(true);
 
