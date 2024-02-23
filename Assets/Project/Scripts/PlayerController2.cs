@@ -78,17 +78,25 @@ namespace TarodevController
             infierno.SetActive(false);
             fondoInfierno.SetActive(false);
             movement.enabled = false;
+            inverseMovement.enabled = false;
             timeSlider.maxValue = 5f;
+
         }
 
         private void Update()
         {
+
+
             _time += Time.deltaTime;
             //position = transform.position;
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 SceneManager.LoadScene("menu");
+            }
+            else if (inverseMovement.enabled == false && Input.GetMouseButtonDown(0) && mapa.activeSelf ==true) 
+            {
+                inverseMovement.enabled = true;
             }
 
 
@@ -100,8 +108,13 @@ namespace TarodevController
 
             if (infierno.activeSelf == false)
             {
-                
-                timer -= Time.deltaTime;
+                if (movement.enabled == false && inverseMovement.enabled == false)
+                {
+                    timer = timeSlider.maxValue;
+                }
+                else
+                    timer -= Time.deltaTime;
+
                 timeSlider.value = timer;
                 gameObject.transform.localScale = new Vector3(1, 1, 1);
             }
