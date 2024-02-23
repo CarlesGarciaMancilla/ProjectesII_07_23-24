@@ -13,6 +13,8 @@ namespace TarodevController
     public class PlayerController : MonoBehaviour, IPlayerController
     {
         [SerializeField] private ScriptableStats _stats;
+        private ScriptableStats _statsSave;
+        [SerializeField] private ScriptableStats _statsAgua;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
         private FrameInput _frameInput;
@@ -72,6 +74,7 @@ namespace TarodevController
 
         private void Awake()
         {
+            _statsSave = _stats;
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<BoxCollider2D>(); // Cambiado de CapsuleCollider2D a BoxCollider2D
             sceneName = SceneManager.GetActiveScene().name;
@@ -371,6 +374,7 @@ namespace TarodevController
             if (other.CompareTag("Water"))
             {
                 isInWater = true;
+                _stats = _statsAgua;
             }
         }
 
@@ -383,6 +387,7 @@ namespace TarodevController
             if (other.CompareTag("Water"))
             {
                 isInWater = false;
+                _stats = _statsSave;
             }
         }
 
