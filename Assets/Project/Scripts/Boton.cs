@@ -6,6 +6,7 @@ public class Boton : MonoBehaviour
 {
     public GameObject platform;
     public GameObject botonActivo;
+    public AudioSource audio;
 
 
     // Start is called before the first frame update
@@ -30,6 +31,7 @@ public class Boton : MonoBehaviour
         {
             
             Debug.Log("checkBoton");
+            audio.Play();
             platform.SetActive(true);
             botonActivo.SetActive(true);
 
