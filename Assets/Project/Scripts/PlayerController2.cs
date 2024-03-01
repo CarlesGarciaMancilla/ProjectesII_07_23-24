@@ -185,8 +185,8 @@ namespace TarodevController
             else
             {
                 CheckCollisions();
-                Debug.Log("Ground Hit: " + groundHit);
-                Debug.Log("Ceiling Hit: " + ceilingHit);
+               // Debug.Log("Ground Hit: " + groundHit);
+               // Debug.Log("Ceiling Hit: " + ceilingHit);
 
                 HandleJump();
                 HandleDirection();
@@ -251,6 +251,7 @@ namespace TarodevController
         }
         public IEnumerator Muerte()
         {
+            Debug.Log("muerte");
             audioDeath.Play();
             muerteParticle.Play();
             yield return new WaitForSeconds(0.3f);
@@ -267,10 +268,10 @@ namespace TarodevController
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-          
+
             if (collision.collider.CompareTag("traps"))
             {
-                 if (infierno.activeSelf == false && canInferno == true)
+                if (infierno.activeSelf == false && canInferno == true)
                 {
                     Debug.LogError("Detected a trap, going to inferno");
                     StartCoroutine(FadeInInfierno());
@@ -278,10 +279,12 @@ namespace TarodevController
                 }
                 else if (mapa.activeSelf == true && canInferno == false)
                 {
+                    Debug.Log("traps2");
                     StartCoroutine(Muerte());
                 }
                 else if (infierno.activeSelf == true) 
                 {
+                    Debug.Log("traps3");
                     StartCoroutine(Muerte());
                 }
              
@@ -290,16 +293,7 @@ namespace TarodevController
             {
                 SceneManager.LoadScene("menu");
             }
-            else if (collision.collider.CompareTag("checkpoint"))
-            {
-                Respawn.instance.respawnPosition = gameObject.transform.position;
-            }
-            else if (collision.collider.CompareTag("checkpointInferno"))
-            {
-                collision.collider.enabled = false;
-                Respawn.instance.respawnInfernoPosition = gameObject.transform.position;             
-                StartCoroutine(FadeInTierra());
-            }
+            
 
         }
 
@@ -346,6 +340,16 @@ namespace TarodevController
             {
                 isTouchingDashTrigger = true;
             }
+            else if (other.CompareTag("checkpoint"))
+            {
+                Respawn.instance.respawnPosition = gameObject.transform.position;
+            }
+            else if (other.CompareTag("checkpointInferno"))
+            {
+                
+                Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
+                StartCoroutine(FadeInTierra());
+            }
         }
 
         private void OnTriggerExit2D(Collider2D other)
@@ -353,6 +357,11 @@ namespace TarodevController
             if (other.CompareTag("dash"))
             {
                 isTouchingDashTrigger = false;
+            }
+            else if (other.CompareTag("checkpointInferno"))
+            {
+                other.enabled = false;
+                
             }
         }
 

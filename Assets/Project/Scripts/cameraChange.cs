@@ -14,7 +14,7 @@ public class cameraChange : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        camera2.active = false;
+        camera2.SetActive(false);
         panel.CrossFadeAlpha(0, 1.0f, false);
 
     }
@@ -26,15 +26,15 @@ public class cameraChange : MonoBehaviour
         if (target.transform.localScale == new Vector3(-1, 1, 1))
         {
             
-            camera1.active = false;
-            camera2.active = true;
+            camera1.SetActive(false);
+            camera2.SetActive(true);
 
 
         }
         else if (target.transform.localScale == new Vector3(1, 1, 1))
         {
-            camera1.active = true;
-            camera2.active = false;
+            camera1.SetActive(true);
+            camera2.SetActive(false);
 
         }
     }

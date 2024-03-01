@@ -11,6 +11,8 @@ TagManager:
   - checkpoint
   - checkpointInferno
   - dash
+  - Boton
+  - checkInf
   layers:
   - Default
   - TransparentFX
