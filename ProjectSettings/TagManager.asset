@@ -13,6 +13,8 @@ TagManager:
   - dash
   - Boton
   - checkInf
+  - agua
+  - Water
   layers:
   - Default
   - TransparentFX

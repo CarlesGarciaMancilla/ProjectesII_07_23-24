@@ -13,6 +13,8 @@ namespace TarodevController
     public class PlayerController : MonoBehaviour, IPlayerController
     {
         [SerializeField] private ScriptableStats _stats;
+        private ScriptableStats _statsSave;
+        [SerializeField] private ScriptableStats _statsAgua;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
         private FrameInput _frameInput;
@@ -48,7 +50,9 @@ namespace TarodevController
         private bool isTouchingDashTrigger = false;
         private bool isDashing = false;
         private float dashTimeLeft;
-        
+
+        //water
+        private bool isInWater = false; // Variable para rastrear si el jugador está en el agua
 
 
 
@@ -70,6 +74,7 @@ namespace TarodevController
 
         private void Awake()
         {
+            _statsSave = _stats;
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<BoxCollider2D>(); // Cambiado de CapsuleCollider2D a BoxCollider2D
             sceneName = SceneManager.GetActiveScene().name;
@@ -144,7 +149,7 @@ namespace TarodevController
             }
 
 
-
+            HandleJump();
 
             GatherInput();
         }
@@ -350,6 +355,11 @@ namespace TarodevController
                 Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
                 StartCoroutine(FadeInTierra());
             }
+            if (other.CompareTag("Water"))
+            {
+                isInWater = true;
+                _stats = _statsAgua;
+            }
         }
 
         private void OnTriggerExit2D(Collider2D other)
@@ -357,6 +367,11 @@ namespace TarodevController
             if (other.CompareTag("dash"))
             {
                 isTouchingDashTrigger = false;
+            }
+            if (other.CompareTag("Water"))
+            {
+                isInWater = false;
+                _stats = _statsSave;
             }
             else if (other.CompareTag("checkpointInferno"))
             {
@@ -424,7 +439,10 @@ namespace TarodevController
 
             if (!_jumpToConsume && !HasBufferedJump) return;
 
-            if (_grounded || CanUseCoyote) ExecuteJump();
+            // Si el jugador está en el agua y se presiona el botón de salto, ejecutar el salto
+           
+
+            if (_grounded || CanUseCoyote || isInWater) ExecuteJump();
 
             _jumpToConsume = false;
         }
@@ -437,6 +455,7 @@ namespace TarodevController
             _coyoteUsable = false;
             _frameVelocity.y = _stats.JumpPower;
             Jumped?.Invoke();
+            Debug.Log("Jumping!");
         }
 
         #endregion
