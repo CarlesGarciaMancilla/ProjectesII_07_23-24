@@ -211,6 +211,7 @@ namespace TarodevController
 
         private void ToInfierno(GameObject mapa, GameObject infierno)
         {
+            _col.enabled = true;
             panel.CrossFadeAlpha(0, 0.5f, false);
             audioTp.Play();
             mapa.SetActive(false);
@@ -225,6 +226,7 @@ namespace TarodevController
 
         private void ReturnToMap(GameObject mapa, GameObject infierno)
         {
+            _col.enabled = true;
             panel.CrossFadeAlpha(0, 0.5f, false);
             audioTp.Play();
             mapa.SetActive(true);
@@ -256,6 +258,7 @@ namespace TarodevController
         }
         public IEnumerator Muerte()
         {
+            _col.enabled = false;
             Debug.Log("muerte");
             audioDeath.Play();
             muerteParticle.Play();
@@ -278,17 +281,22 @@ namespace TarodevController
             {
                 if (infierno.activeSelf == false && canInferno == true)
                 {
+                    _col.enabled = false;
                     Debug.LogError("Detected a trap, going to inferno");
                     StartCoroutine(FadeInInfierno());
-                    canInferno = false;
+                    canInferno = false;                     
+
+            
                 }
                 else if (mapa.activeSelf == true && canInferno == false)
                 {
+                    
                     Debug.Log("traps2");
                     StartCoroutine(Muerte());
                 }
                 else if (infierno.activeSelf == true) 
                 {
+                    
                     Debug.Log("traps3");
                     StartCoroutine(Muerte());
                 }
