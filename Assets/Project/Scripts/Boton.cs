@@ -8,35 +8,46 @@ public class Boton : MonoBehaviour
     public GameObject botonActivo;
     public AudioSource audio;
     public GameObject camera;
-    public bool reset = true;
+    public bool reset;
 
 
     // Start is called before the first frame update
-    void Awake()
+    private void Awake()
     {
         StartCoroutine(Waiter());
+        reset = false;
 
 
-        
 
 
 
     }
-    private void Start()
+    private void OnEnable()
     {
-        
+        Debug.Log("onEnable");
+        StartCoroutine(Waiter());
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (camera.activeSelf == false && reset == true)
-        {
-
-            Reset();
+        
 
 
-        }
+
+        //if (camera.activeSelf == false && reset == true)
+        //{
+        //    Debug.Log("reset");
+        //    reset = false;
+        //    Reset();
+        //}
+        //else if (camera.activeSelf == true && reset == true) 
+        //{
+        //    Debug.Log("reset1");
+        //    reset = false;
+        //    Reset();
+        //}
 
 
 
@@ -46,10 +57,11 @@ public class Boton : MonoBehaviour
 
     public IEnumerator Waiter()
     {
+        
         botonActivo.SetActive(false);
         yield return new WaitForSeconds(0.5f);
         platform.SetActive(false);
-        reset = false;
+        
     }
 
     public void Reset()
@@ -66,7 +78,7 @@ public class Boton : MonoBehaviour
             audio.Play();
             platform.SetActive(true);
             botonActivo.SetActive(true);
-
+            
         }
         
 

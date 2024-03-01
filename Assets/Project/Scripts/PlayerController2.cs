@@ -366,7 +366,7 @@ namespace TarodevController
             }
             else if (other.CompareTag("checkpointInferno"))
             {
-                other.enabled = false;
+                
                 Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
                 StartCoroutine(FadeInTierra());
             }
@@ -377,6 +377,11 @@ namespace TarodevController
             if (other.CompareTag("dash"))
             {
                 isTouchingDashTrigger = false;
+            }
+            else if (other.CompareTag("checkpointInferno"))
+            {
+                other.enabled = false;
+                
             }
         }
 
