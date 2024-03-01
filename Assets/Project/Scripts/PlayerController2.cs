@@ -302,10 +302,7 @@ namespace TarodevController
                 }
              
             }
-            else if (collision.collider.CompareTag("final"))
-            {
-                SceneManager.LoadScene("menu");
-            }
+           
             
 
         }
@@ -363,6 +360,11 @@ namespace TarodevController
                 Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
                 StartCoroutine(FadeInTierra());
             }
+            else if (other.CompareTag("final"))
+            {
+                SceneManager.LoadScene("menu");
+            }
+
             if (other.CompareTag("Water"))
             {
                 isInWater = true;
