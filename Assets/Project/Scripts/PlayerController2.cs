@@ -317,7 +317,7 @@ namespace TarodevController
                 _bufferedJumpUsable = true;
                 _endedJumpEarly = false;
                 GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
-                if(!particles.isPlaying)
+                if (!particles.isPlaying)
                     particles.Play();
             }
             // Left the Ground
