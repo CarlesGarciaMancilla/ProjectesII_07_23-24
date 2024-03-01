@@ -19,7 +19,7 @@ namespace TarodevController
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
 
-        public GameObject particles;
+        public ParticleSystem particles;
         private string sceneName;
         public GameObject mapa;
         public GameObject fondoMapa;
@@ -113,16 +113,22 @@ namespace TarodevController
                     timer = timeSlider.maxValue;
                 }
                 else
-                    timer -= Time.deltaTime;
+                {
+                    if (timer > 0.0f)
+                    {
+                        timer -= Time.deltaTime;
+                        if (timer <= 0 && !canInferno)
+                        {
+                            canInferno = true;
+                        }
+                    }
+                }
 
                 timeSlider.value = timer;
                 gameObject.transform.localScale = new Vector3(1, 1, 1);
             }
 
-            if (timer <= 0) 
-            {
-                canInferno = true;
-            }
+
 
             //if (timerInfierno <= 0)
             //{
@@ -163,32 +169,9 @@ namespace TarodevController
                 //invencible = false;
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
-                particles.SetActive(false);
-                
+            
             }
         }
-
-        private void LateUpdate()
-        {
-            //Debug.Log("transform vector " + Round(transform.position));
-            //Debug.Log("position vector " + Round(position));
-
-            //if (Round(transform.position) == Round(position))
-            //{
-            //    if (canInferno)
-            //    {
-            //        ToInfierno(mapa, infierno);
-
-            //    }
-            //    else if (canReturn)
-            //    {
-            //        ReturnToMap(mapa, infierno);
-            //    }
-                
-                    
-            //}
-        }
-
         private void FixedUpdate()
         {
           
@@ -229,14 +212,10 @@ namespace TarodevController
             fondoMapa.SetActive(false);
             nubes.SetActive(false);
             infierno.SetActive(true);
-            canInferno = false;
             fondoInfierno.SetActive(true);
             movement.enabled = true;
             inverseMovement.enabled = false;
             Respawn.instance.InfernoRespawn(gameObject);
-            
-
-
         }
 
         private void ReturnToMap(GameObject mapa, GameObject infierno)
@@ -293,11 +272,9 @@ namespace TarodevController
             {
                  if (infierno.activeSelf == false && canInferno == true)
                 {
-
+                    Debug.LogError("Detected a trap, going to inferno");
                     StartCoroutine(FadeInInfierno());
                     canInferno = false;
-
-
                 }
                 else if (mapa.activeSelf == true && canInferno == false)
                 {
@@ -346,11 +323,14 @@ namespace TarodevController
                 _bufferedJumpUsable = true;
                 _endedJumpEarly = false;
                 GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
-                particles.SetActive(true);
+                if(!particles.isPlaying)
+                    particles.Play();
             }
             // Left the Ground
             else if (_grounded && !groundHit)
             {
+                if (particles.isPlaying)
+                    particles.Stop();
                 _grounded = false;
                 _frameLeftGrounded = _time;
                 GroundedChanged?.Invoke(false, 0);
