@@ -84,7 +84,7 @@ namespace TarodevController
             fondoInfierno.SetActive(false);
             movement.enabled = false;
             inverseMovement.enabled = false;
-            timeSlider.maxValue = 5f;
+            timeSlider.maxValue = 10f;
 
         }
 
@@ -235,7 +235,7 @@ namespace TarodevController
             infierno.SetActive(false);
             fondoInfierno.SetActive(false);
             timeSlider.enabled = true;
-            timer = 5f;
+            timer = 10f;
             movement.enabled = false;
             inverseMovement.enabled = true;
             Respawn.instance.NormalRespawn(gameObject);
@@ -258,6 +258,7 @@ namespace TarodevController
         }
         public IEnumerator Muerte()
         {
+            
             _col.enabled = false;
             Debug.Log("muerte");
             audioDeath.Play();
@@ -297,7 +298,7 @@ namespace TarodevController
                 else if (infierno.activeSelf == true) 
                 {
                     
-                    Debug.Log("traps3");
+                    Debug.Log("traps3");                  
                     StartCoroutine(Muerte());
                 }
              
