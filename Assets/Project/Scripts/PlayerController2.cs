@@ -59,6 +59,7 @@ namespace TarodevController
         public bool inferno = false;
         public bool canInferno = false;
         public bool canReturn = false;
+        public bool godMode = false;
         //public bool invencible = false;
         public float timer = 5f;
 
@@ -102,6 +103,18 @@ namespace TarodevController
             else if (inverseMovement.enabled == false && Input.GetMouseButtonDown(0) && mapa.activeSelf ==true) 
             {
                 inverseMovement.enabled = true;
+            }
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                if (!godMode)
+                {
+                    godMode = true;
+                }
+                else if (godMode) 
+                {
+                    godMode = false;
+                }
+                
             }
 
 
@@ -280,28 +293,42 @@ namespace TarodevController
 
             if (collision.collider.CompareTag("traps"))
             {
-                if (infierno.activeSelf == false && canInferno == true)
+                if (!godMode)
                 {
-                    _col.enabled = false;
-                    Debug.LogError("Detected a trap, going to inferno");
-                    StartCoroutine(FadeInInfierno());
-                    canInferno = false;                     
+                    if (infierno.activeSelf == false && canInferno == true)
+                    {
+                        _col.enabled = false;
+                        Debug.LogError("Detected a trap, going to inferno");
+                        StartCoroutine(FadeInInfierno());
+                        canInferno = false;
 
-            
+
+                    }
+                    else if (mapa.activeSelf == true && canInferno == false)
+                    {
+
+                        Debug.Log("traps2");
+                        StartCoroutine(Muerte());
+                    }
+                    else if (infierno.activeSelf == true)
+                    {
+
+                        Debug.Log("traps3");
+                        StartCoroutine(Muerte());
+                    }
                 }
-                else if (mapa.activeSelf == true && canInferno == false)
+                else if (godMode) 
                 {
-                    
-                    Debug.Log("traps2");
-                    StartCoroutine(Muerte());
+                    if (infierno.activeSelf == false && canInferno == true)
+                    {
+                        _col.enabled = false;
+                        Debug.LogError("Detected a trap, going to inferno");
+                        StartCoroutine(FadeInInfierno());
+                        canInferno = false;
+
+
+                    }
                 }
-                else if (infierno.activeSelf == true) 
-                {
-                    
-                    Debug.Log("traps3");                  
-                    StartCoroutine(Muerte());
-                }
-             
             }
            
             

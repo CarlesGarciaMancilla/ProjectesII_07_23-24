@@ -4,16 +4,15 @@ using UnityEngine;
 
 
 
-
-
-
 public class CheckPointAnimation : MonoBehaviour
 {
-    private Animator mAnimator;
+
+    public ParticleSystem particles;
+
     // Start is called before the first frame update
     void Start()
     {
-        mAnimator = GetComponent<Animator>();
+        
         
     }
 
@@ -23,12 +22,24 @@ public class CheckPointAnimation : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    //private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    Debug.Log("checkpoint");
+    //    if (collision.collider.CompareTag("Player"))
+    //    {
+    //        particles.Play();
+    //    }
+    //}
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.collider.CompareTag("Player"))
+        Debug.Log("checkpoint2");
+        if (collision.CompareTag("Player"))
         {
-            mAnimator.SetBool("contact", true);
+            particles.Play();
         }
-    }
+
 
     }
+
+}
