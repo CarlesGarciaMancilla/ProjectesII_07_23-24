@@ -393,7 +393,34 @@ namespace TarodevController
             }
             else if (other.CompareTag("final"))
             {
-                SceneManager.LoadScene("menu");
+                if (sceneName == "Nivel1") 
+                {
+                    SceneManager.LoadScene("Nivel2");
+                }
+                else if(sceneName == "Nivel2")
+                {
+                    SceneManager.LoadScene("Nivel3");
+                }
+                else if(sceneName == "Nivel3")
+                {
+                    SceneManager.LoadScene("Nivel4");
+                }
+                else if(sceneName == "Nivel4")
+                {
+                    SceneManager.LoadScene("Nivel5");
+                }
+                else if(sceneName == "Nivel5")
+                {
+                    SceneManager.LoadScene("Nivel6");
+                }
+                else if(sceneName == "Nivel6")
+                {
+                    SceneManager.LoadScene("Nivel7");
+                }
+                else
+                {
+                    SceneManager.LoadScene("menu");
+                }
             }
 
             if (other.CompareTag("Water"))
