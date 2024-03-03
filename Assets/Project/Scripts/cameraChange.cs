@@ -9,6 +9,8 @@ public class cameraChange : MonoBehaviour
     public Transform target;
     public GameObject camera1;
     public GameObject camera2;
+    public AudioSource music;
+    public AudioSource musicInf;
     public Image panel;
 
     // Start is called before the first frame update
@@ -29,12 +31,29 @@ public class cameraChange : MonoBehaviour
             camera1.SetActive(false);
             camera2.SetActive(true);
 
+            music.Pause();
+            if (!musicInf.isPlaying) 
+            {
+                musicInf.Play();
+            }
+            
+            
+
+
 
         }
         else if (target.transform.localScale == new Vector3(1, 1, 1))
         {
             camera1.SetActive(true);
             camera2.SetActive(false);
+
+
+            musicInf.Pause();
+            if (!music.isPlaying)
+            {
+                music.Play();
+            }
+            
 
         }
     }

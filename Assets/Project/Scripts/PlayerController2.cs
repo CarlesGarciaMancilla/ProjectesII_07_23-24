@@ -86,6 +86,7 @@ namespace TarodevController
             movement.enabled = false;
             inverseMovement.enabled = false;
             timeSlider.maxValue = 10f;
+            
 
         }
 
@@ -120,12 +121,14 @@ namespace TarodevController
 
 
             if (infierno.activeSelf == true) 
-            {               
+            {
+                timeSlider.gameObject.SetActive(false);
                 gameObject.transform.localScale = new Vector3(-1, 1, 1);
             }
 
             if (infierno.activeSelf == false)
             {
+                timeSlider.gameObject.SetActive(true);
                 if (movement.enabled == false && inverseMovement.enabled == false)
                 {
                     timer = timeSlider.maxValue;
