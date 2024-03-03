@@ -117,6 +117,11 @@ namespace TarodevController
                 }
                 
             }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SceneManager.LoadScene(sceneName);
+
+            }
 
 
 
