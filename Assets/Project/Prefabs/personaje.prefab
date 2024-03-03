@@ -37,7 +37,7 @@ Transform:
   m_Children:
   - {fileID: 8312546661623861757}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6013070110433020100
 SpriteRenderer:
@@ -152,16 +152,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stats: {fileID: 11400000, guid: 1f3011d8350ff324b959cb302b131762, type: 2}
-  particles: {fileID: 8825367492792188875}
+  particles: {fileID: 4534735904962481727}
   mapa: {fileID: 0}
-  sueloMapa: {fileID: 0}
+  fondoMapa: {fileID: 0}
+  fondoInfierno: {fileID: 0}
+  nubes: {fileID: 0}
   timeSlider: {fileID: 0}
   infierno: {fileID: 0}
-  sueloInfierno: {fileID: 0}
   inverseMovement: {fileID: 4821979394893601340}
   movement: {fileID: 503909259558762951}
+  audioTp: {fileID: 0}
+  audioDeath: {fileID: 0}
+  panel: {fileID: 0}
+  muerteParticle: {fileID: 0}
+  dashDistance: 5
+  dashSpeed: 10
   inferno: 0
   canInferno: 0
+  canReturn: 0
   timer: 3
 --- !u!61 &3189531744058868834
 BoxCollider2D:
@@ -295,13 +303,13 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9db178285e9d20b4ebc7d55fb9a8ed27, type: 3}
+--- !u!198 &4534735904962481727 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 695419418596939352, guid: 9db178285e9d20b4ebc7d55fb9a8ed27, type: 3}
+  m_PrefabInstance: {fileID: 3983502045937047655}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8312546661623861757 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4905588933895489946, guid: 9db178285e9d20b4ebc7d55fb9a8ed27, type: 3}
-  m_PrefabInstance: {fileID: 3983502045937047655}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8825367492792188875 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5562577727014758316, guid: 9db178285e9d20b4ebc7d55fb9a8ed27, type: 3}
   m_PrefabInstance: {fileID: 3983502045937047655}
   m_PrefabAsset: {fileID: 0}

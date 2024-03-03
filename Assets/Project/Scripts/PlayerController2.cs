@@ -13,13 +13,15 @@ namespace TarodevController
     public class PlayerController : MonoBehaviour, IPlayerController
     {
         [SerializeField] private ScriptableStats _stats;
+        private ScriptableStats _statsSave;
+        [SerializeField] private ScriptableStats _statsAgua;
         private Rigidbody2D _rb;
         private BoxCollider2D _col;
         private FrameInput _frameInput;
         private Vector2 _frameVelocity;
         private bool _cachedQueryStartInColliders;
 
-        public GameObject particles;
+        public ParticleSystem particles;
         private string sceneName;
         public GameObject mapa;
         public GameObject fondoMapa;
@@ -32,7 +34,8 @@ namespace TarodevController
         public AudioSource audioTp;
         public AudioSource audioDeath;
         private Vector3 position;
-
+        public Image panel;
+        public ParticleSystem muerteParticle;
 
         //Dash
 
@@ -47,15 +50,17 @@ namespace TarodevController
         private bool isTouchingDashTrigger = false;
         private bool isDashing = false;
         private float dashTimeLeft;
-        
+
+        //water
+        private bool isInWater = false; // Variable para rastrear si el jugador está en el agua
 
 
 
         public bool inferno = false;
         public bool canInferno = false;
         public bool canReturn = false;
+        public bool godMode = false;
         //public bool invencible = false;
-        public float timerInfierno = 5;
         public float timer = 5f;
 
         #region Interface
@@ -70,6 +75,7 @@ namespace TarodevController
 
         private void Awake()
         {
+            _statsSave = _stats;
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<BoxCollider2D>(); // Cambiado de CapsuleCollider2D a BoxCollider2D
             sceneName = SceneManager.GetActiveScene().name;
@@ -78,11 +84,16 @@ namespace TarodevController
             infierno.SetActive(false);
             fondoInfierno.SetActive(false);
             movement.enabled = false;
-            timeSlider.maxValue = 5f;
+            inverseMovement.enabled = false;
+            timeSlider.maxValue = 10f;
+            
+
         }
 
         private void Update()
         {
+
+
             _time += Time.deltaTime;
             //position = transform.position;
 
@@ -90,35 +101,66 @@ namespace TarodevController
             {
                 SceneManager.LoadScene("menu");
             }
+            else if (inverseMovement.enabled == false && Input.GetMouseButtonDown(0) && mapa.activeSelf ==true) 
+            {
+                inverseMovement.enabled = true;
+            }
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                if (!godMode)
+                {
+                    godMode = true;
+                }
+                else if (godMode) 
+                {
+                    godMode = false;
+                }
+                
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SceneManager.LoadScene(sceneName);
+
+            }
 
 
 
             if (infierno.activeSelf == true) 
             {
-                
-                timerInfierno -= Time.deltaTime;
-                timeSlider.value = timerInfierno;
+                timeSlider.gameObject.SetActive(false);
                 gameObject.transform.localScale = new Vector3(-1, 1, 1);
             }
 
             if (infierno.activeSelf == false)
             {
-                
-                timer -= Time.deltaTime;
+                timeSlider.gameObject.SetActive(true);
+                if (movement.enabled == false && inverseMovement.enabled == false)
+                {
+                    timer = timeSlider.maxValue;
+                }
+                else
+                {
+                    if (timer > 0.0f)
+                    {
+                        timer -= Time.deltaTime;
+                        if (timer <= 0 && !canInferno)
+                        {
+                            canInferno = true;
+                        }
+                    }
+                }
+
                 timeSlider.value = timer;
                 gameObject.transform.localScale = new Vector3(1, 1, 1);
             }
 
-            if (timer <= 0) 
-            {
-                canInferno = true;
-            }
 
-            if (timerInfierno <= 0)
-            {
-                canReturn = true;
-                //ReturnToMap(mapa, infierno);
-            }
+
+            //if (timerInfierno <= 0)
+            //{
+            //    canReturn = true;
+            //    //ReturnToMap(mapa, infierno);
+            //}
 
 
 
@@ -128,7 +170,7 @@ namespace TarodevController
             }
 
 
-
+            HandleJump();
 
             GatherInput();
         }
@@ -153,32 +195,9 @@ namespace TarodevController
                 //invencible = false;
                 _jumpToConsume = true;
                 _timeJumpWasPressed = _time;
-                particles.SetActive(false);
-                
+            
             }
         }
-
-        private void LateUpdate()
-        {
-            //Debug.Log("transform vector " + Round(transform.position));
-            //Debug.Log("position vector " + Round(position));
-
-            //if (Round(transform.position) == Round(position))
-            //{
-            //    if (canInferno)
-            //    {
-            //        ToInfierno(mapa, infierno);
-
-            //    }
-            //    else if (canReturn)
-            //    {
-            //        ReturnToMap(mapa, infierno);
-            //    }
-                
-                    
-            //}
-        }
-
         private void FixedUpdate()
         {
           
@@ -192,8 +211,8 @@ namespace TarodevController
             else
             {
                 CheckCollisions();
-                Debug.Log("Ground Hit: " + groundHit);
-                Debug.Log("Ceiling Hit: " + ceilingHit);
+               // Debug.Log("Ground Hit: " + groundHit);
+               // Debug.Log("Ceiling Hit: " + ceilingHit);
 
                 HandleJump();
                 HandleDirection();
@@ -213,24 +232,23 @@ namespace TarodevController
 
         private void ToInfierno(GameObject mapa, GameObject infierno)
         {
+            _col.enabled = true;
+            panel.CrossFadeAlpha(0, 0.5f, false);
             audioTp.Play();
             mapa.SetActive(false);
             fondoMapa.SetActive(false);
             nubes.SetActive(false);
-            timerInfierno = 5f;
             infierno.SetActive(true);
             fondoInfierno.SetActive(true);
-            timeSlider.enabled = false;
             movement.enabled = true;
             inverseMovement.enabled = false;
             Respawn.instance.InfernoRespawn(gameObject);
-            
-
-
         }
 
         private void ReturnToMap(GameObject mapa, GameObject infierno)
         {
+            _col.enabled = true;
+            panel.CrossFadeAlpha(0, 0.5f, false);
             audioTp.Play();
             mapa.SetActive(true);
             fondoMapa.SetActive(true);
@@ -238,12 +256,39 @@ namespace TarodevController
             infierno.SetActive(false);
             fondoInfierno.SetActive(false);
             timeSlider.enabled = true;
-            timer = 5f;
+            timer = 10f;
             movement.enabled = false;
             inverseMovement.enabled = true;
             Respawn.instance.NormalRespawn(gameObject);
             
 
+        }
+
+        public IEnumerator FadeInInfierno()
+        {
+            panel.CrossFadeAlpha(1, 0.1f, false);
+            yield return new WaitForSeconds(1);
+            ToInfierno(mapa, infierno);
+        }
+
+        public IEnumerator FadeInTierra()
+        {
+            panel.CrossFadeAlpha(1, 0.1f, false);
+            yield return new WaitForSeconds(1);
+            ReturnToMap(mapa, infierno);
+        }
+        public IEnumerator Muerte()
+        {
+            
+            _col.enabled = false;
+            Debug.Log("muerte");
+            audioDeath.Play();
+            muerteParticle.Play();
+            yield return new WaitForSeconds(0.3f);
+            panel.CrossFadeAlpha(1, 0.05f, false);
+            yield return new WaitForSeconds(0.5f);      
+            Respawn.instance.RestartLevel();
+            SceneManager.LoadScene(sceneName);
         }
 
         #region Collisions
@@ -253,40 +298,48 @@ namespace TarodevController
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-          
+
             if (collision.collider.CompareTag("traps"))
             {
-                if (mapa.activeSelf == false && canReturn == true)
+                if (!godMode)
                 {
-                    canReturn = false;
-                    ReturnToMap(mapa, infierno);
-                    
+                    if (infierno.activeSelf == false && canInferno == true)
+                    {
+                        _col.enabled = false;
+                        Debug.LogError("Detected a trap, going to inferno");
+                        StartCoroutine(FadeInInfierno());
+                        canInferno = false;
 
+
+                    }
+                    else if (mapa.activeSelf == true && canInferno == false)
+                    {
+
+                        Debug.Log("traps2");
+                        StartCoroutine(Muerte());
+                    }
+                    else if (infierno.activeSelf == true)
+                    {
+
+                        Debug.Log("traps3");
+                        StartCoroutine(Muerte());
+                    }
                 }
-                else if(infierno.activeSelf == false && canInferno == true)
+                else if (godMode) 
                 {
-                    canInferno = false;
-                    ToInfierno(mapa, infierno);
-                    
+                    if (infierno.activeSelf == false && canInferno == true)
+                    {
+                        _col.enabled = false;
+                        Debug.LogError("Detected a trap, going to inferno");
+                        StartCoroutine(FadeInInfierno());
+                        canInferno = false;
+
+
+                    }
                 }
-                else 
-                {
-                    audioDeath.Play();
-                    SceneManager.LoadScene(sceneName);
-                }
             }
-            else if (collision.collider.CompareTag("final"))
-            {
-                SceneManager.LoadScene("menu");
-            }
-            else if (collision.collider.CompareTag("checkpoint"))
-            {
-                Respawn.instance.respawnPosition = gameObject.transform.position;
-            }
-            else if (collision.collider.CompareTag("checkpointInferno"))
-            {
-                Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
-            }
+           
+            
 
         }
 
@@ -310,11 +363,14 @@ namespace TarodevController
                 _bufferedJumpUsable = true;
                 _endedJumpEarly = false;
                 GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
-                particles.SetActive(true);
+                if (!particles.isPlaying)
+                    particles.Play();
             }
             // Left the Ground
             else if (_grounded && !groundHit)
             {
+                if (particles.isPlaying)
+                    particles.Stop();
                 _grounded = false;
                 _frameLeftGrounded = _time;
                 GroundedChanged?.Invoke(false, 0);
@@ -330,6 +386,53 @@ namespace TarodevController
             {
                 isTouchingDashTrigger = true;
             }
+            else if (other.CompareTag("checkpoint"))
+            {
+                Respawn.instance.respawnPosition = gameObject.transform.position;
+            }
+            else if (other.CompareTag("checkpointInferno"))
+            {
+                
+                Respawn.instance.respawnInfernoPosition = gameObject.transform.position;
+                StartCoroutine(FadeInTierra());
+            }
+            else if (other.CompareTag("final"))
+            {
+                if (sceneName == "Nivel1") 
+                {
+                    SceneManager.LoadScene("Nivel2");
+                }
+                else if(sceneName == "Nivel2")
+                {
+                    SceneManager.LoadScene("Nivel3");
+                }
+                else if(sceneName == "Nivel3")
+                {
+                    SceneManager.LoadScene("Nivel4");
+                }
+                else if(sceneName == "Nivel4")
+                {
+                    SceneManager.LoadScene("Nivel5");
+                }
+                else if(sceneName == "Nivel5")
+                {
+                    SceneManager.LoadScene("Nivel6");
+                }
+                else if(sceneName == "Nivel6")
+                {
+                    SceneManager.LoadScene("Nivel7");
+                }
+                else
+                {
+                    SceneManager.LoadScene("menu");
+                }
+            }
+
+            if (other.CompareTag("Water"))
+            {
+                isInWater = true;
+                _stats = _statsAgua;
+            }
         }
 
         private void OnTriggerExit2D(Collider2D other)
@@ -337,6 +440,16 @@ namespace TarodevController
             if (other.CompareTag("dash"))
             {
                 isTouchingDashTrigger = false;
+            }
+            if (other.CompareTag("Water"))
+            {
+                isInWater = false;
+                _stats = _statsSave;
+            }
+            else if (other.CompareTag("checkpointInferno"))
+            {
+                other.enabled = false;
+                
             }
         }
 
@@ -399,7 +512,10 @@ namespace TarodevController
 
             if (!_jumpToConsume && !HasBufferedJump) return;
 
-            if (_grounded || CanUseCoyote) ExecuteJump();
+            // Si el jugador está en el agua y se presiona el botón de salto, ejecutar el salto
+           
+
+            if (_grounded || CanUseCoyote || isInWater) ExecuteJump();
 
             _jumpToConsume = false;
         }
@@ -412,6 +528,7 @@ namespace TarodevController
             _coyoteUsable = false;
             _frameVelocity.y = _stats.JumpPower;
             Jumped?.Invoke();
+            Debug.Log("Jumping!");
         }
 
         #endregion
@@ -476,9 +593,12 @@ namespace TarodevController
         public Vector2 FrameInput { get; }
     }
 
-
-  
-
-       
     
+
+
+
+
+
+
+
 }

@@ -11,6 +11,10 @@ TagManager:
   - checkpoint
   - checkpointInferno
   - dash
+  - Boton
+  - checkInf
+  - agua
+  - Water
   layers:
   - Default
   - TransparentFX
