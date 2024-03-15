@@ -164,7 +164,7 @@ namespace TarodevController
 
 
 
-           if (isTouchingDashTrigger && Input.GetMouseButtonDown(1) && !isDashing)
+           if (isTouchingDashTrigger && Input.GetMouseButtonDown(0) && !isDashing)
             {
             StartDash();
             }
@@ -179,7 +179,7 @@ namespace TarodevController
         {
             _frameInput = new FrameInput
             {
-                JumpDown = Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.C),
+                JumpDown = Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(0)
                 //JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
               //  Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
             };
@@ -456,7 +456,7 @@ namespace TarodevController
         private void StartDash()
         {
             isDashing = true;
-            dashStartPos = transform.position; // Almacenar la posici�n inicial del dash
+            dashStartPos = transform.position; // Almacenar la posicion inicial del dash
             dashTravelledDistance = 0f;
             _rb.gravityScale = 0; // Desactivar la gravedad durante el dash
             _rb.velocity = new Vector2(transform.right.x * dashSpeed, 0); // Establecer velocidad de dash
@@ -508,14 +508,14 @@ namespace TarodevController
 
         private void HandleJump()
         {
-            if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && _rb.velocity.y > 0) _endedJumpEarly = true;
+            if (!_endedJumpEarly && !_grounded && !_frameInput.JumpHeld && !isDashing && _rb.velocity.y > 0 ) _endedJumpEarly = true;
 
             if (!_jumpToConsume && !HasBufferedJump) return;
 
             // Si el jugador está en el agua y se presiona el botón de salto, ejecutar el salto
            
 
-            if (_grounded || CanUseCoyote || isInWater) ExecuteJump();
+            if (!isDashing && !isTouchingDashTrigger && (_grounded || CanUseCoyote || isInWater) ) ExecuteJump();
 
             _jumpToConsume = false;
         }
