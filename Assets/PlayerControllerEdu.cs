@@ -13,7 +13,7 @@ public class PlayerControllerEdu : MonoBehaviour
     [SerializeField] float walkForce;
     [SerializeField] float maxWalkVelocity;
     [SerializeField] float jumpForce;
-    [SerializeField] float swimForce;
+    [SerializeField] float jumpWaterForce;
 
     [SerializeField] float dashPower;
     [SerializeField] float dashTime;
@@ -57,52 +57,7 @@ public class PlayerControllerEdu : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //Grounded
-        Collider2D[] checks = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
-
-        grounded = false;
-        foreach (Collider2D c in checks)
-        {
-            grounded |= c.transform.CompareTag("ground");
-        }
-
-        grounded &= rb.velocity.y <= 0.1f;
-
-        if(grounded && !lastGrounded)
-        {
-            //I touched the floor
-            currentVelocity.y = 0.0f;
-            movementVector.y = 0;
-        }
-        else if(!grounded && lastGrounded)
-        {
-            //Left the floor
-            movementVector.y = -gravity;
-        }
-
-        lastGrounded = grounded;
-
-        //Movement
-        currentVelocity += movementVector * Time.fixedDeltaTime;
-        currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
-        //VIGILAR AMB LA Y
-        //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
-        rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime);
-
-        if (wantsToJump && grounded && !isDashing)
-        {
-            wantsToJump = false;
-            currentVelocity.y = jumpForce;
-        }
-
-        if (wantsToDash && canDash && !isDashing) 
-        {
-            StartCoroutine(Dash());
-           
-
-        }
-
-        if (agua) 
+        if (agua)
         {
             Collider2D[] checks1 = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
 
@@ -135,6 +90,53 @@ public class PlayerControllerEdu : MonoBehaviour
             //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
             rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime);
 
+            if (wantsToJump && !isDashing)
+            {
+                wantsToJump = false;
+                currentVelocity.y = jumpWaterForce;
+            }
+
+            if (wantsToDash && canDash && !isDashing)
+            {
+                StartCoroutine(Dash());
+
+
+            }
+        }
+        else
+        {
+            //Grounded
+            Collider2D[] checks = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
+
+            grounded = false;
+            foreach (Collider2D c in checks)
+            {
+                grounded |= c.transform.CompareTag("ground");
+            }
+
+            grounded &= rb.velocity.y <= 0.1f;
+
+            if (grounded && !lastGrounded)
+            {
+                //I touched the floor
+                currentVelocity.y = 0.0f;
+                movementVector.y = 0;
+            }
+            else if (!grounded && lastGrounded)
+            {
+                //Left the floor
+                movementVector.y = -gravity;
+            }
+
+            lastGrounded = grounded;
+
+            //Movement
+            currentVelocity += movementVector * Time.fixedDeltaTime;
+            currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
+            //VIGILAR AMB LA Y
+            //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
+            rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime);
+
             if (wantsToJump && grounded && !isDashing)
             {
                 wantsToJump = false;
@@ -149,6 +151,8 @@ public class PlayerControllerEdu : MonoBehaviour
             }
         }
 
+        
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -162,7 +166,7 @@ public class PlayerControllerEdu : MonoBehaviour
         {
          canDash = true;
         }
-        else if (collision.transform.CompareTag("agua"))
+        else if (collision.transform.CompareTag("Water"))
         {
             agua = true;
         }
@@ -174,7 +178,7 @@ public class PlayerControllerEdu : MonoBehaviour
         {
             canDash = false;
         }
-        else if (collision.transform.CompareTag("agua"))
+        else if (collision.transform.CompareTag("Water"))
         {
             agua = false;
         }
