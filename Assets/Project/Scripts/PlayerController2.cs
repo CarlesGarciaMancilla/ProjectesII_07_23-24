@@ -54,6 +54,7 @@ namespace TarodevController
         //water
         private bool isInWater = false; // Variable para rastrear si el jugador está en el agua
 
+        public Animator animator; // Asegúrate de que esta referencia se ha establecido en el Inspector
 
 
         public bool inferno = false;
@@ -86,8 +87,12 @@ namespace TarodevController
             movement.enabled = false;
             inverseMovement.enabled = false;
             timeSlider.maxValue = 10f;
-            
 
+            animator = GetComponent<Animator>();
+            if (animator == null)
+            {
+                Debug.LogError("No se encontró el componente Animator.", this);
+            }
         }
 
         private void Update()
@@ -348,6 +353,7 @@ namespace TarodevController
             Physics2D.queriesStartInColliders = false;
 
 
+            bool wasGrounded = _grounded;
             // Ground and Ceiling
             bool groundHit = Physics2D.BoxCast(_col.bounds.center, _col.bounds.size, 0, Vector2.down, _stats.GrounderDistance, ~_stats.PlayerLayer);
             bool ceilingHit = Physics2D.BoxCast(_col.bounds.center, _col.bounds.size, 0, Vector2.up, _stats.GrounderDistance, ~_stats.PlayerLayer);
@@ -377,6 +383,19 @@ namespace TarodevController
             }
 
             Physics2D.queriesStartInColliders = _cachedQueryStartInColliders;
+
+            _grounded = groundHit;
+
+            // Landed on the Ground
+            if (!wasGrounded && _grounded)
+            {
+                animator.SetBool("Jump", false); // Desactivar la animación de salto y activar la de correr
+            }
+            // Left the Ground
+            else if (wasGrounded && !_grounded)
+            {
+                animator.SetBool("Jump", true); // Activar la animación de salto
+            }
         }
 
 
@@ -527,6 +546,9 @@ namespace TarodevController
             _bufferedJumpUsable = false;
             _coyoteUsable = false;
             _frameVelocity.y = _stats.JumpPower;
+
+            animator.SetBool("Jump", true); // Activar la animación de salto
+
             Jumped?.Invoke();
             Debug.Log("Jumping!");
         }
