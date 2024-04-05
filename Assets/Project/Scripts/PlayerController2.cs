@@ -474,6 +474,8 @@ namespace TarodevController
             {
                 isInWater = true;
                 _stats = _statsAgua;
+                animator.SetBool("Swim", true);
+
             }
         }
 
@@ -487,6 +489,7 @@ namespace TarodevController
             {
                 isInWater = false;
                 _stats = _statsSave;
+                animator.SetBool("Swim", false);
             }
             else if (other.CompareTag("checkpointInferno"))
             {
