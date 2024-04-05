@@ -37,6 +37,10 @@ namespace TarodevController
         public Image panel;
         public ParticleSystem muerteParticle;
 
+        public GameObject hellLoading;
+        public GameObject hellReady;
+
+
         //Dash
 
         [SerializeField] private float dashDistance = 5f; // Distancia que el dash deber�a recorrer
@@ -76,6 +80,7 @@ namespace TarodevController
 
         private void Awake()
         {
+            hellReady.SetActive(false);
             _statsSave = _stats;
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<BoxCollider2D>(); // Cambiado de CapsuleCollider2D a BoxCollider2D
@@ -97,6 +102,18 @@ namespace TarodevController
 
         private void Update()
         {
+
+
+            if (!canInferno) 
+            {
+            hellReady.SetActive(false);
+            hellLoading.SetActive(true);
+            }
+            else
+            {
+                hellReady.SetActive(true);
+                hellLoading.SetActive(false);
+            }
 
 
             _time += Time.deltaTime;
