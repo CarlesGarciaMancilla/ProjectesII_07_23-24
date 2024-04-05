@@ -93,6 +93,7 @@ namespace TarodevController
             inverseMovement.enabled = false;
             timeSlider.maxValue = 10f;
 
+
             animator = GetComponent<Animator>();
             if (animator == null)
             {
@@ -175,6 +176,7 @@ namespace TarodevController
                 timeSlider.value = timer;
                 gameObject.transform.localScale = new Vector3(1, 1, 1);
             }
+
 
 
 
@@ -303,11 +305,15 @@ namespace TarodevController
         {
             
             _col.enabled = false;
+            movement.enabled = false;
+            inverseMovement.enabled = false;
+            _rb.simulated = false;
             Debug.Log("muerte");
             audioDeath.Play();
             muerteParticle.Play();
-            yield return new WaitForSeconds(0.3f);
-            panel.CrossFadeAlpha(1, 0.05f, false);
+            animator.SetBool("Death", true);
+            yield return new WaitForSeconds(0.15f);
+            panel.CrossFadeAlpha(1, 0.5f, false);
             yield return new WaitForSeconds(0.5f);      
             Respawn.instance.RestartLevel();
             SceneManager.LoadScene(sceneName);

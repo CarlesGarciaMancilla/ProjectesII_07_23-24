@@ -21,7 +21,6 @@ public class Movement : MonoBehaviour
     void Update()
     {
         transform.position += Vector3.left * SpeedValues[(int)CurrentSpeed] * Time.deltaTime;
-
         
     }
 }
