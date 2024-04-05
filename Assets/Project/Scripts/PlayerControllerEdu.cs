@@ -93,7 +93,7 @@ public class PlayerControllerEdu : MonoBehaviour
         }
         wantsToJump = Input.GetKey(KeyCode.Space);
         wantsToJump = Input.GetMouseButton(0);
-        wantsToDash = Input.GetMouseButton(1);
+        wantsToDash = Input.GetMouseButton(0);
 
 
         if (infierno.activeSelf == true)
