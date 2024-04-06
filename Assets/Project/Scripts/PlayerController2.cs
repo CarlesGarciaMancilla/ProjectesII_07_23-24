@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 using System.Collections;
 using System.Collections.Generic;
+using static UnityEngine.ParticleSystem;
 
 namespace TarodevController
 {
@@ -80,6 +81,13 @@ namespace TarodevController
 
         private void Awake()
         {
+            if (particles.isPlaying)
+            {
+                Debug.Log("particulas adios");
+                particles.Clear();
+                particles.Stop();
+            }
+
             hellReady.SetActive(false);
             _statsSave = _stats;
             _rb = GetComponent<Rigidbody2D>();
@@ -92,6 +100,8 @@ namespace TarodevController
             movement.enabled = false;
             inverseMovement.enabled = false;
             timeSlider.maxValue = 10f;
+            _stats.JumpBuffer = 0.0f;
+            
 
 
             animator = GetComponent<Animator>();
@@ -127,6 +137,13 @@ namespace TarodevController
             else if (inverseMovement.enabled == false && Input.GetMouseButtonDown(0) && mapa.activeSelf ==true) 
             {
                 inverseMovement.enabled = true;
+                _stats.JumpBuffer = 0.15f;
+                if (!particles.isPlaying)
+                {
+                    Debug.Log("particulas hola");
+                    particles.Play();
+                }
+
             }
             if (Input.GetKeyDown(KeyCode.G))
             {
@@ -397,8 +414,12 @@ namespace TarodevController
                 _bufferedJumpUsable = true;
                 _endedJumpEarly = false;
                 GroundedChanged?.Invoke(true, Mathf.Abs(_frameVelocity.y));
-                if (!particles.isPlaying)
+                if (!particles.isPlaying && inverseMovement.enabled == true || !particles.isPlaying && movement.enabled == true) 
+                {
+                    Debug.Log("particulas hola2");
                     particles.Play();
+                }
+                    
             }
             // Left the Ground
             else if (_grounded && !groundHit)
