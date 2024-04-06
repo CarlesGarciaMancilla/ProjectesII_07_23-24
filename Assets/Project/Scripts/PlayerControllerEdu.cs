@@ -463,16 +463,16 @@ public class PlayerControllerEdu : MonoBehaviour
         float originalGravity = gravity;
         float initialVelX = currentVelocity.x;
         gravity =0f;
-        currentVelocity = new Vector2(initialVelX * dashPower, 0.0f);
+       // currentVelocity = new Vector2(initialVelX * dashPower, 0.0f);
         movementVector.y = 0.0f;
         //Vector2 originalVelocity = currentVelocity;
         //rb.AddForce(dashVector,ForceMode2D.Impulse);
-        //rb.MovePosition(rb.position + dashVector);
-        yield return new WaitForSeconds(dashTime);
-        movementVector.y = -gravity;
+        rb.MovePosition(rb.position + dashVector);
+        yield return new WaitForSeconds(dashTime);  
         currentVelocity.x = initialVelX;
         gravity = originalGravity;
-        isDashing=false;
+        movementVector.y = -gravity;
+        isDashing =false;
         yield return new WaitForSeconds(dashCooldown);
 
     }
