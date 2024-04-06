@@ -256,8 +256,10 @@ namespace TarodevController
 
         private void ToInfierno(GameObject mapa, GameObject infierno)
         {
+           
             _col.enabled = true;
             panel.CrossFadeAlpha(0, 0.5f, false);
+           
             audioTp.Play();
             mapa.SetActive(false);
             fondoMapa.SetActive(false);
@@ -290,8 +292,10 @@ namespace TarodevController
 
         public IEnumerator FadeInInfierno()
         {
+           
             panel.CrossFadeAlpha(1, 0.1f, false);
             yield return new WaitForSeconds(1);
+            animator.SetBool("Death", false);
             ToInfierno(mapa, infierno);
         }
 
@@ -333,11 +337,12 @@ namespace TarodevController
                 {
                     if (infierno.activeSelf == false && canInferno == true)
                     {
+                        animator.SetBool("Death", true);
                         _col.enabled = false;
                         Debug.LogError("Detected a trap, going to inferno");
                         StartCoroutine(FadeInInfierno());
                         canInferno = false;
-
+                       
 
                     }
                     else if (mapa.activeSelf == true && canInferno == false)
