@@ -115,10 +115,15 @@ namespace TarodevController
         {
 
 
-            if (!canInferno) 
+            if (!canInferno && infierno.activeSelf == false)
             {
-            hellReady.SetActive(false);
-            hellLoading.SetActive(true);
+                hellReady.SetActive(false);
+                hellLoading.SetActive(true);
+            }
+            else if (infierno.activeSelf == true) 
+            {
+                hellReady.SetActive(false);
+                hellLoading.SetActive(false);
             }
             else
             {
