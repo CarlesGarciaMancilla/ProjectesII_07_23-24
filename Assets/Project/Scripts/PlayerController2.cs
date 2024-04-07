@@ -225,7 +225,7 @@ namespace TarodevController
         {
             _frameInput = new FrameInput
             {
-                JumpDown = Input.GetButtonDown("Jump") || Input.GetMouseButtonDown(0)
+                JumpDown =  Input.GetMouseButtonDown(0)
                 //JumpHeld = Input.GetButton("Jump") || Input.GetKey(KeyCode.C),
               //  Move = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"))
             };
@@ -493,7 +493,7 @@ namespace TarodevController
                 }
                 else if(sceneName == "Nivel6")
                 {
-                    SceneManager.LoadScene("Nivel7");
+                    SceneManager.LoadScene("Nivel7 1");
                 }
                 else
                 {
