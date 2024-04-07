@@ -64,7 +64,7 @@ public class MenuButtons : MonoBehaviour
                 SceneManager.LoadScene("Nivel6");
                 break;
             case "level7":
-                SceneManager.LoadScene("Nivel7");
+                SceneManager.LoadScene("Nivel7 1");
                 break;
             case "exit":
 #if UNITY_EDITOR
