@@ -40,6 +40,7 @@ namespace TarodevController
 
         public GameObject hellLoading;
         public GameObject hellReady;
+        public GameObject onboarding;
 
 
         //Dash
@@ -81,13 +82,14 @@ namespace TarodevController
 
         private void Awake()
         {
+            
             if (particles.isPlaying)
             {
                 Debug.Log("particulas adios");
                 particles.Clear();
                 particles.Stop();
             }
-
+            onboarding.SetActive(true);
             hellReady.SetActive(false);
             _statsSave = _stats;
             _rb = GetComponent<Rigidbody2D>();
@@ -119,11 +121,13 @@ namespace TarodevController
             {
                 hellReady.SetActive(false);
                 hellLoading.SetActive(true);
+                onboarding.SetActive(true);
             }
             else if (infierno.activeSelf == true) 
             {
                 hellReady.SetActive(false);
                 hellLoading.SetActive(false);
+                onboarding.SetActive(false);
             }
             else
             {
