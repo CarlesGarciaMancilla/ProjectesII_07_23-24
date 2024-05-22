@@ -13,10 +13,14 @@ public class PlayerControllerEdu : MonoBehaviour
     private Vector2 currentVelocity;
     private Vector2 movementVector;
     private Vector2 dashVector;
+    private Vector2 dashStartPos;
+    private float originalGravity;
+    private float dashTravelledDistance;
     [SerializeField] float walkForce;
     [SerializeField] float maxWalkVelocity;
     [SerializeField] float jumpForce;
     [SerializeField] float jumpWaterForce;
+    [SerializeField] float dashDistance = 5f;
 
     [SerializeField] float dashPower;
     [SerializeField] float dashTime;
@@ -170,7 +174,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
             if (wantsToDash && canDash && !isDashing)
             {
-                StartCoroutine(Dash());
+                StartDash();
 
 
             }
@@ -217,7 +221,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
             if (wantsToDash && canDash && !isDashing)
             {
-                StartCoroutine(Dash());
+                StartDash();
 
 
             }
@@ -264,7 +268,14 @@ public class PlayerControllerEdu : MonoBehaviour
 
             if (wantsToDash && canDash && !isDashing)
             {
-                StartCoroutine(Dash());
+                StartDash();
+
+
+            }
+
+            if (isDashing)
+            {
+                ContinueDash();
 
 
             }
@@ -386,6 +397,42 @@ public class PlayerControllerEdu : MonoBehaviour
         {
             Debug.Log(collision.name);
             //Destroy(this.gameObject);
+            if (!godMode)
+            {
+                if (infierno.activeSelf == false && canInferno == true)
+                {
+                    _col.enabled = false;
+                    Debug.LogError("Detected a trap, going to inferno");
+                    StartCoroutine(FadeInInfierno());
+                    canInferno = false;
+
+
+                }
+                else if (mapa.activeSelf == true && canInferno == false)
+                {
+
+                    Debug.Log("traps2");
+                    StartCoroutine(Muerte());
+                }
+                else if (infierno.activeSelf == true)
+                {
+
+                    Debug.Log("traps3");
+                    StartCoroutine(Muerte());
+                }
+            }
+            else if (godMode)
+            {
+                if (infierno.activeSelf == false && canInferno == true)
+                {
+                    _col.enabled = false;
+                    Debug.LogError("Detected a trap, going to inferno");
+                    StartCoroutine(FadeInInfierno());
+                    canInferno = false;
+
+
+                }
+            }
         }
         else if (collision.transform.CompareTag("dash")) 
         {
@@ -456,20 +503,59 @@ public class PlayerControllerEdu : MonoBehaviour
     }
 
 
-    private IEnumerator Dash() 
-    {
-        Debug.Log("dash");
-        isDashing = true;
-        float originalGravity = gravity;
-        gravity =0f;
-        Vector2 originalVelocity = currentVelocity;
-        //rb.AddForce(dashVector,ForceMode2D.Impulse);
-        rb.MovePosition(rb.position + dashVector);
-        yield return new WaitForSeconds(dashTime);
-        currentVelocity = originalVelocity;
-        gravity = originalGravity;
-        isDashing=false;
-        yield return new WaitForSeconds(dashCooldown);
+    //private IEnumerator Dash() 
+    //{
+    //    Debug.Log("dash");
+    //    isDashing = true;
+    //    float originalGravity = gravity;
+    //    gravity =0f;
+    //    Vector2 originalVelocity = currentVelocity;
+    //    //rb.AddForce(dashVector,ForceMode2D.Impulse);
+    //    rb.MovePosition(rb.position + dashVector);
+    //    yield return new WaitForSeconds(dashTime);
+    //    currentVelocity = originalVelocity;
+    //    gravity = originalGravity;
+    //    isDashing=false;
+    //    yield return new WaitForSeconds(dashCooldown);
 
+    //}
+
+
+    private void StartDash()
+    {
+        isDashing = true;
+        originalGravity = gravity;
+        dashStartPos = transform.position; // Almacenar la posicion inicial del dash
+        Debug.Log(dashStartPos);
+        gravity = 0; // Desactivar la gravedad durante el dash
+
+    }
+
+    private void ContinueDash()
+    {
+        if (isDashing)
+        {
+            
+            // Calcular la distancia recorrida desde el inicio del dash
+            dashTravelledDistance = Vector2.Distance(dashStartPos, transform.position);
+            Debug.Log(dashTravelledDistance);
+            if (dashTravelledDistance < dashDistance)
+            {
+
+
+            }
+            else
+            {
+                EndDash();
+            }
+        }
+    }
+
+    private void EndDash()
+    {
+        isDashing = false;
+        gravity = originalGravity; // Restaurar la gravedad
+                     // Restablecer la velocidad horizontal y vertical a los valores previos al dash
+        currentVelocity = new Vector2(walkForce, 0);
     }
 }
