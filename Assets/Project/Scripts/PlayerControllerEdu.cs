@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class PlayerControllerEdu : MonoBehaviour
 {
     [SerializeField] Rigidbody2D rb;
-    [SerializeField] float gravity = 7f;
+    [SerializeField] float gravity;
     [SerializeField] float waterGravity = 7f;
     private Vector2 currentVelocity;
     private Vector2 movementVector;
@@ -33,8 +33,8 @@ public class PlayerControllerEdu : MonoBehaviour
     [SerializeField] bool canDash = false;
     [SerializeField] bool isDashing = false;
 
-    public bool grounded { get; private set; }
-    private bool lastGrounded;
+    [SerializeField] public bool grounded { get; private set; }
+    [SerializeField] private bool lastGrounded;
     [SerializeField] Transform groundCheck;
 
 
@@ -135,6 +135,7 @@ public class PlayerControllerEdu : MonoBehaviour
     {
         if (agua)
         {
+            /////////////////////////// MOVIMIENTO AGUA //////////////////////////////
             Collider2D[] checks1 = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
 
             grounded = false;
@@ -181,6 +182,8 @@ public class PlayerControllerEdu : MonoBehaviour
         }
         else if (infierno.activeSelf == true) 
         {
+            /////////////////////////// MOVIMIENTO INFIERNO //////////////////////////////
+
             //Grounded
             Collider2D[] checks = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
 
@@ -228,6 +231,7 @@ public class PlayerControllerEdu : MonoBehaviour
         }   
         else
         {
+            /////////////////////////// MOVIMIENTO NORMAL //////////////////////////////
             //Grounded
             Collider2D[] checks = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
 
@@ -249,6 +253,13 @@ public class PlayerControllerEdu : MonoBehaviour
             {
                 //Left the floor
                 movementVector.y = -gravity;
+            }
+            else if (isDashing)
+            {
+
+                ContinueDash();
+
+
             }
 
             lastGrounded = grounded;
@@ -273,12 +284,10 @@ public class PlayerControllerEdu : MonoBehaviour
 
             }
 
-            if (isDashing)
-            {
-                ContinueDash();
+            
 
 
-            }
+
         }
 
         
@@ -527,8 +536,8 @@ public class PlayerControllerEdu : MonoBehaviour
         originalGravity = gravity;
         dashStartPos = transform.position; // Almacenar la posicion inicial del dash
         Debug.Log(dashStartPos);
-        gravity = 0; // Desactivar la gravedad durante el dash
-
+        gravity = 0f; // Desactivar la gravedad durante el dash
+        currentVelocity.y = gravity;
     }
 
     private void ContinueDash()
@@ -542,7 +551,7 @@ public class PlayerControllerEdu : MonoBehaviour
             if (dashTravelledDistance < dashDistance)
             {
 
-
+                movementVector.y = gravity;
             }
             else
             {
@@ -555,7 +564,8 @@ public class PlayerControllerEdu : MonoBehaviour
     {
         isDashing = false;
         gravity = originalGravity; // Restaurar la gravedad
-                     // Restablecer la velocidad horizontal y vertical a los valores previos al dash
-        currentVelocity = new Vector2(walkForce, 0);
+        grounded = true;
+        // Restablecer la velocidad horizontal y vertical a los valores previos al dash
+
     }
 }
