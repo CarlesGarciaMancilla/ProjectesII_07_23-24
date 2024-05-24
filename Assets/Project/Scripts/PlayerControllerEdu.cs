@@ -349,7 +349,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
             //Movement
 
-            if (stop == false)
+            if (stop == false && !isDashing)
             {
 
                 currentVelocity += movementVector * Time.fixedDeltaTime;
@@ -612,24 +612,6 @@ public class PlayerControllerEdu : MonoBehaviour
     }
 
 
-    //private IEnumerator Dash() 
-    //{
-    //    Debug.Log("dash");
-    //    isDashing = true;
-    //    float originalGravity = gravity;
-    //    gravity =0f;
-    //    Vector2 originalVelocity = currentVelocity;
-    //    //rb.AddForce(dashVector,ForceMode2D.Impulse);
-    //    rb.MovePosition(rb.position + dashVector);
-    //    yield return new WaitForSeconds(dashTime);
-    //    currentVelocity = originalVelocity;
-    //    gravity = originalGravity;
-    //    isDashing=false;
-    //    yield return new WaitForSeconds(dashCooldown);
-
-    //}
-
-
     private void StartDash()
     {
         stopDash = false;
@@ -653,7 +635,11 @@ public class PlayerControllerEdu : MonoBehaviour
             {
 
                 movementVector.y = gravity;
-                
+                currentVelocity += movementVector * Time.fixedDeltaTime;
+                currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
+                rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime *5);
+
+
             }
             else
             {
