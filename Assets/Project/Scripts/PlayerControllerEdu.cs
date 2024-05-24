@@ -12,6 +12,7 @@ public class PlayerControllerEdu : MonoBehaviour
     [SerializeField] float gravity;
     [SerializeField] float waterGravity = 7f;
     private Vector2 currentVelocity;
+    private Vector2 lastPosition;
     private Vector2 movementVector;
     private Vector2 dashVector;
     private Vector2 dashStartPos;
@@ -110,6 +111,13 @@ public class PlayerControllerEdu : MonoBehaviour
 
     private void Update()
     {
+        if (stop == true) 
+        {
+            timer = timeSlider.maxValue;
+        }
+
+        
+
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -207,7 +215,7 @@ public class PlayerControllerEdu : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (agua)
+        if (agua && infierno.activeSelf == false)
         {
             /////////////////////////// MOVIMIENTO AGUA //////////////////////////////
             Collider2D[] checks1 = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
@@ -241,7 +249,7 @@ public class PlayerControllerEdu : MonoBehaviour
             //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
             rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime);
 
-            if (wantsToJump && !isDashing)
+            if (wantsToJump && !isDashing && !stopDash)
             {
                 wantsToJump = false;
                 currentVelocity.y = jumpWaterForce;
@@ -250,6 +258,67 @@ public class PlayerControllerEdu : MonoBehaviour
             if (wantsToDash && canDash && !isDashing)
             {
                 StartDash();
+
+
+            }
+            else if (isDashing)
+            {
+
+                ContinueDash();
+
+
+            }
+        }
+        if (agua && infierno.activeSelf == true)
+        {
+            /////////////////////////// MOVIMIENTO AGUA INFIERNO//////////////////////////////
+            Collider2D[] checks1 = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
+
+            grounded = false;
+            foreach (Collider2D c in checks1)
+            {
+                grounded |= c.transform.CompareTag("ground");
+            }
+
+            grounded &= rb.velocity.y <= 0.1f;
+
+            if (grounded && !lastGrounded)
+            {
+                //I touched the floor
+                currentVelocity.y = 0.0f;
+                movementVector.y = 0;
+            }
+            else if (!grounded && lastGrounded)
+            {
+                //Left the floor
+                movementVector.y = waterGravity;
+            }
+
+            lastGrounded = grounded;
+
+            //Movement
+            currentVelocity += movementVector * Time.fixedDeltaTime;
+            currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
+            //VIGILAR AMB LA Y
+            //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
+            rb.MovePosition(rb.position - currentVelocity * Time.fixedDeltaTime);
+
+            if (wantsToJump && !isDashing)
+            {
+                wantsToJump = false;
+                currentVelocity.y = -jumpWaterForce;
+            }
+
+            if (wantsToDash && canDash && !isDashing)
+            {
+                StartDash();
+
+
+            }
+            else if (isDashing)
+            {
+
+                ContinueDash();
 
 
             }
@@ -308,6 +377,13 @@ public class PlayerControllerEdu : MonoBehaviour
 
 
             }
+            else if (isDashing)
+            {
+
+                ContinueDash();
+
+
+            }
         }   
         else
         {
@@ -356,6 +432,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
                 rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime);
 
+
             }
 
             //VIGILAR AMB LA Y
@@ -382,7 +459,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
         }
 
-        
+
 
     }
 
@@ -547,6 +624,7 @@ public class PlayerControllerEdu : MonoBehaviour
         else if (collision.transform.CompareTag("Water"))
         {
             agua = true;
+            stopDash = false;
             animator.SetBool("Swim", true);
 
         }
@@ -633,12 +711,20 @@ public class PlayerControllerEdu : MonoBehaviour
             Debug.Log(dashTravelledDistance);
             if (dashTravelledDistance < dashDistance)
             {
-
-                movementVector.y = gravity;
-                currentVelocity += movementVector * Time.fixedDeltaTime;
-                currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
-                rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime *5);
-
+                if (infierno.activeSelf == true)
+                {
+                    movementVector.y = gravity;
+                    currentVelocity += movementVector * Time.fixedDeltaTime;
+                    currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
+                    rb.MovePosition(rb.position - currentVelocity * Time.fixedDeltaTime * 5);
+                }
+                else
+                {
+                    movementVector.y = gravity;
+                    currentVelocity += movementVector * Time.fixedDeltaTime;
+                    currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
+                    rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime * 5);
+                }
 
             }
             else
