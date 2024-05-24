@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class PlayerControllerEdu : MonoBehaviour
 {
     [SerializeField] Rigidbody2D rb;
+    public Animator animator;
     [SerializeField] float gravity;
     [SerializeField] float waterGravity = 7f;
     private Vector2 currentVelocity;
@@ -36,6 +37,7 @@ public class PlayerControllerEdu : MonoBehaviour
     [SerializeField] public bool grounded { get; private set; }
     [SerializeField] private bool lastGrounded;
     [SerializeField] Transform groundCheck;
+    public ParticleSystem muerteParticle;
 
 
     //cosas mapa
@@ -45,7 +47,10 @@ public class PlayerControllerEdu : MonoBehaviour
     public GameObject mapa;
     public GameObject fondoMapa;
     public GameObject fondoInfierno;
-    //public GameObject nubes;
+    public GameObject nubes;
+    public GameObject hellLoading;
+    public GameObject hellReady;
+    public GameObject onboarding;
     public Slider timeSlider;
     public GameObject infierno;
     public AudioSource audioTp;
@@ -59,6 +64,7 @@ public class PlayerControllerEdu : MonoBehaviour
     public bool canInferno = false;
     public bool canReturn = false;
     public bool godMode = false;
+    public bool stop = true;
     //public bool invencible = false;
     public float timer = 5f;
 
@@ -69,35 +75,118 @@ public class PlayerControllerEdu : MonoBehaviour
         _col = GetComponent<CapsuleCollider2D>(); 
         sceneName = SceneManager.GetActiveScene().name;
 
+
+
+        onboarding.SetActive(true);
+        hellReady.SetActive(false);
+        sceneName = SceneManager.GetActiveScene().name;
         infierno.SetActive(false);
         fondoInfierno.SetActive(false);
         timeSlider.maxValue = 10f;
 
 
+
+        animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            Debug.LogError("No se encontró el componente Animator.", this);
+        }
+
+
     }
     void Start()
     {
-        currentVelocity = new Vector2(walkForce, 0);
-        dashVector = new Vector2(dashPower, 0);
+        if (stop == true)
+        {
 
+            currentVelocity = new Vector2(0.0f, 0.0f);
+            currentVelocity.x = 0.0f;
+            currentVelocity.y = 0.0f;
+
+
+        }
+        else 
+        {
+            currentVelocity = new Vector2(walkForce, 0);
+            dashVector = new Vector2(dashPower, 0);
+
+
+            movementVector = new Vector2(walkForce, 0.0f);
+        }
         grounded = true;
         lastGrounded = grounded;
-        movementVector = new Vector2(walkForce, 0.0f);
+
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C)) 
+
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-        wantsToDash = true;
+            SceneManager.LoadScene("menu");
         }
-        else if (Input.GetKeyUp(KeyCode.C))
+        else if (stop == true)
         {
-            wantsToDash = false;
+
+            currentVelocity = new Vector2(0.0f,0.0f);
+            currentVelocity.x = 0.0f;
+            currentVelocity.y = 0.0f;
+
+
         }
-        wantsToJump = Input.GetKey(KeyCode.Space);
-        wantsToJump = Input.GetMouseButton(0);
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (!godMode)
+            {
+                godMode = true;
+            }
+            else if (godMode)
+            {
+                godMode = false;
+            }
+
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(sceneName);
+
+        }
+
+
+        if (!canInferno && infierno.activeSelf == false)
+        {
+            hellReady.SetActive(false);
+            hellLoading.SetActive(true);
+            onboarding.SetActive(true);
+        }
+        else if (infierno.activeSelf == true)
+        {
+            hellReady.SetActive(false);
+            hellLoading.SetActive(false);
+            onboarding.SetActive(false);
+        }
+        else
+        {
+            hellReady.SetActive(true);
+            hellLoading.SetActive(false);
+        }
+
+
+        //if (Input.GetKeyDown(KeyCode.C)) 
+        //{
+        //wantsToDash = true;
+        //}
+        //else if (Input.GetKeyUp(KeyCode.C))
+        //{
+        //    wantsToDash = false;
+        //}
+        //wantsToJump = Input.GetKey(KeyCode.Space);
+        wantsToJump = Input.GetMouseButton(0);       
         wantsToDash = Input.GetMouseButton(0);
+        if (Input.GetMouseButton(0)) 
+        {
+            stop = false;
+        }
 
 
         if (infierno.activeSelf == true)
@@ -197,6 +286,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
             if (grounded && !lastGrounded)
             {
+                animator.SetBool("Jump", false);
                 //I touched the floor
                 currentVelocity.y = 0.0f;
                 movementVector.y = 0;
@@ -220,6 +310,7 @@ public class PlayerControllerEdu : MonoBehaviour
             {
                 wantsToJump = false;
                 currentVelocity.y = -jumpForce;
+                animator.SetBool("Jump", true);
             }
 
             if (wantsToDash && canDash && !isDashing)
@@ -245,6 +336,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
             if (grounded && !lastGrounded)
             {
+                animator.SetBool("Jump", false);
                 //I touched the floor
                 currentVelocity.y = 0.0f;
                 movementVector.y = 0;
@@ -252,6 +344,7 @@ public class PlayerControllerEdu : MonoBehaviour
             else if (!grounded && lastGrounded)
             {
                 //Left the floor
+                animator.SetBool("Jump", true);
                 movementVector.y = -gravity;
             }
             else if (isDashing)
@@ -302,9 +395,10 @@ public class PlayerControllerEdu : MonoBehaviour
         audioTp.Play();
         mapa.SetActive(false);
         fondoMapa.SetActive(false);
-        //nubes.SetActive(false);
+        nubes.SetActive(false);
         infierno.SetActive(true);
         fondoInfierno.SetActive(true);
+        stop = true;
         Respawn.instance.InfernoRespawn(gameObject);
     }
 
@@ -315,11 +409,12 @@ public class PlayerControllerEdu : MonoBehaviour
         audioTp.Play();
         mapa.SetActive(true);
         fondoMapa.SetActive(true);
-        //nubes.SetActive(true);
+        nubes.SetActive(true);
         infierno.SetActive(false);
         fondoInfierno.SetActive(false);
         timeSlider.enabled = true;
         timer = 10f;
+        stop = true;
         //currentVelocity.x = -currentVelocity.x;
         Respawn.instance.NormalRespawn(gameObject);
 
@@ -330,6 +425,7 @@ public class PlayerControllerEdu : MonoBehaviour
     {
         panel.CrossFadeAlpha(1, 0.1f, false);
         yield return new WaitForSeconds(1);
+        animator.SetBool("Death", false);
         ToInfierno(mapa, infierno);
     }
 
@@ -345,7 +441,8 @@ public class PlayerControllerEdu : MonoBehaviour
         _col.enabled = false;
         Debug.Log("muerte");
         audioDeath.Play();
-        //muerteParticle.Play();
+        muerteParticle.Play();
+        animator.SetBool("Death", true);
         yield return new WaitForSeconds(0.3f);
         panel.CrossFadeAlpha(1, 0.05f, false);
         yield return new WaitForSeconds(0.5f);
@@ -362,6 +459,7 @@ public class PlayerControllerEdu : MonoBehaviour
             {
                 if (infierno.activeSelf == false && canInferno == true)
                 {
+                    animator.SetBool("Death", true);
                     _col.enabled = false;
                     Debug.LogError("Detected a trap, going to inferno");
                     StartCoroutine(FadeInInfierno());
@@ -406,42 +504,42 @@ public class PlayerControllerEdu : MonoBehaviour
         {
             Debug.Log(collision.name);
             //Destroy(this.gameObject);
-            if (!godMode)
-            {
-                if (infierno.activeSelf == false && canInferno == true)
-                {
-                    _col.enabled = false;
-                    Debug.LogError("Detected a trap, going to inferno");
-                    StartCoroutine(FadeInInfierno());
-                    canInferno = false;
+            //if (!godMode)
+            //{
+            //    if (infierno.activeSelf == false && canInferno == true)
+            //    {
+            //        _col.enabled = false;
+            //        Debug.LogError("Detected a trap, going to inferno");
+            //        StartCoroutine(FadeInInfierno());
+            //        canInferno = false;
 
 
-                }
-                else if (mapa.activeSelf == true && canInferno == false)
-                {
+            //    }
+            //    else if (mapa.activeSelf == true && canInferno == false)
+            //    {
 
-                    Debug.Log("traps2");
-                    StartCoroutine(Muerte());
-                }
-                else if (infierno.activeSelf == true)
-                {
+            //        Debug.Log("traps2");
+            //        StartCoroutine(Muerte());
+            //    }
+            //    else if (infierno.activeSelf == true)
+            //    {
 
-                    Debug.Log("traps3");
-                    StartCoroutine(Muerte());
-                }
-            }
-            else if (godMode)
-            {
-                if (infierno.activeSelf == false && canInferno == true)
-                {
-                    _col.enabled = false;
-                    Debug.LogError("Detected a trap, going to inferno");
-                    StartCoroutine(FadeInInfierno());
-                    canInferno = false;
+            //        Debug.Log("traps3");
+            //        StartCoroutine(Muerte());
+            //    }
+            //}
+            //else if (godMode)
+            //{
+            //    if (infierno.activeSelf == false && canInferno == true)
+            //    {
+            //        _col.enabled = false;
+            //        Debug.LogError("Detected a trap, going to inferno");
+            //        StartCoroutine(FadeInInfierno());
+            //        canInferno = false;
 
 
-                }
-            }
+            //    }
+            //}
         }
         else if (collision.transform.CompareTag("dash")) 
         {
@@ -450,6 +548,8 @@ public class PlayerControllerEdu : MonoBehaviour
         else if (collision.transform.CompareTag("Water"))
         {
             agua = true;
+            animator.SetBool("Swim", true);
+
         }
         else if (collision.CompareTag("checkpoint"))
         {
@@ -503,6 +603,7 @@ public class PlayerControllerEdu : MonoBehaviour
         else if (collision.transform.CompareTag("Water"))
         {
             agua = false;
+            animator.SetBool("Swim", false);
         }
         else if (collision.CompareTag("checkpointInferno"))
         {
