@@ -65,6 +65,7 @@ public class PlayerControllerEdu : MonoBehaviour
     public bool canReturn = false;
     public bool godMode = false;
     public bool stop = true;
+    public bool stopDash = false;
     //public bool invencible = false;
     public float timer = 5f;
 
@@ -200,6 +201,8 @@ public class PlayerControllerEdu : MonoBehaviour
             gameObject.transform.localScale = new Vector3(1, 1, 1);
         }
 
+        
+
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -269,6 +272,7 @@ public class PlayerControllerEdu : MonoBehaviour
             if (grounded && !lastGrounded)
             {
                 animator.SetBool("Jump", false);
+                stopDash = false;
                 //I touched the floor
                 currentVelocity.y = 0.0f;
                 movementVector.y = 0;
@@ -291,7 +295,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
                 rb.MovePosition(rb.position - currentVelocity * Time.fixedDeltaTime);
             }
-            if (wantsToJump && grounded && !isDashing)
+            if (wantsToJump && grounded && !isDashing && !stopDash)
             {
                 wantsToJump = false;
                 currentVelocity.y = -jumpForce;
@@ -322,6 +326,7 @@ public class PlayerControllerEdu : MonoBehaviour
             if (grounded && !lastGrounded)
             {
                 animator.SetBool("Jump", false);
+                stopDash = false;
                 //I touched the floor
                 currentVelocity.y = 0.0f;
                 movementVector.y = 0;
@@ -357,7 +362,7 @@ public class PlayerControllerEdu : MonoBehaviour
             //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
 
 
-            if (wantsToJump && grounded && !isDashing)
+            if (wantsToJump && grounded && !isDashing && !stopDash)
             {
                 wantsToJump = false;
                 currentVelocity.y = jumpForce;
@@ -627,6 +632,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
     private void StartDash()
     {
+        stopDash = false;
         isDashing = true;
         originalGravity = gravity;
         dashStartPos = transform.position; // Almacenar la posicion inicial del dash
@@ -647,6 +653,7 @@ public class PlayerControllerEdu : MonoBehaviour
             {
 
                 movementVector.y = gravity;
+                
             }
             else
             {
@@ -660,6 +667,8 @@ public class PlayerControllerEdu : MonoBehaviour
         isDashing = false;
         gravity = originalGravity; // Restaurar la gravedad
         grounded = true;
+        stopDash = true;
+
         // Restablecer la velocidad horizontal y vertical a los valores previos al dash
 
     }
