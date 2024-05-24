@@ -115,17 +115,8 @@ public class PlayerControllerEdu : MonoBehaviour
             SceneManager.LoadScene("menu");
         }
 
-        if (stop == true)
-        {
 
-            currentVelocity = new Vector2(0.0f, 0.0f);
-            currentVelocity.x = 0.0f;
-            currentVelocity.y = 0.0f;
-
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.G))
+            if (Input.GetKeyDown(KeyCode.G))
         {
             if (!godMode)
             {
@@ -292,12 +283,14 @@ public class PlayerControllerEdu : MonoBehaviour
             lastGrounded = grounded;
 
             //Movement
-            currentVelocity += movementVector * Time.fixedDeltaTime;
-            currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
-            //VIGILAR AMB LA Y
-            //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
-            rb.MovePosition(rb.position - currentVelocity * Time.fixedDeltaTime);
-
+            if (stop == false)
+            {
+                currentVelocity += movementVector * Time.fixedDeltaTime;
+                currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
+                //VIGILAR AMB LA Y
+                //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
+                rb.MovePosition(rb.position - currentVelocity * Time.fixedDeltaTime);
+            }
             if (wantsToJump && grounded && !isDashing)
             {
                 wantsToJump = false;
@@ -350,11 +343,19 @@ public class PlayerControllerEdu : MonoBehaviour
             lastGrounded = grounded;
 
             //Movement
-            currentVelocity += movementVector * Time.fixedDeltaTime;
-            currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
+
+            if (stop == false)
+            {
+
+                currentVelocity += movementVector * Time.fixedDeltaTime;
+                currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
+                rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime);
+
+            }
+
             //VIGILAR AMB LA Y
             //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
-            rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime);
+
 
             if (wantsToJump && grounded && !isDashing)
             {
@@ -382,7 +383,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
     private void ToInfierno(GameObject mapa, GameObject infierno)
     {
-        currentVelocity.x = -currentVelocity.x;
+        currentVelocity.x = 0.0f;
         _col.enabled = true;
         panel.CrossFadeAlpha(0, 0.5f, false);
         audioTp.Play();

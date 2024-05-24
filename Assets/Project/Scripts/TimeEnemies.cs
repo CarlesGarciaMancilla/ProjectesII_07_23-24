@@ -6,13 +6,13 @@ public class TimeEnemies : MonoBehaviour
 {
     public GameObject[] enemies;
     public Animator[] enemiesAnimator;
-    public Movement movementScript;
-    public InverseMapMovement inverseMapMovement;
+    public bool start = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
 
         for (int i = 0; i < enemies.Length; i++)
         {
@@ -27,7 +27,12 @@ public class TimeEnemies : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (movementScript.enabled == false && inverseMapMovement.enabled == false)
+        if (Input.GetMouseButton(0))
+        {
+            start = true;
+        }
+
+        if (start == false)
         {
 
             for (int i = 0; i < enemiesAnimator.Length; i++)
