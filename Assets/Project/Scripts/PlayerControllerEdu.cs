@@ -96,23 +96,12 @@ public class PlayerControllerEdu : MonoBehaviour
     }
     void Start()
     {
-        if (stop == true)
-        {
-
-            currentVelocity = new Vector2(0.0f, 0.0f);
-            currentVelocity.x = 0.0f;
-            currentVelocity.y = 0.0f;
-
-
-        }
-        else 
-        {
             currentVelocity = new Vector2(walkForce, 0);
             dashVector = new Vector2(dashPower, 0);
 
 
             movementVector = new Vector2(walkForce, 0.0f);
-        }
+        
         grounded = true;
         lastGrounded = grounded;
 
@@ -125,15 +114,17 @@ public class PlayerControllerEdu : MonoBehaviour
         {
             SceneManager.LoadScene("menu");
         }
-        else if (stop == true)
+
+        if (stop == true)
         {
 
-            currentVelocity = new Vector2(0.0f,0.0f);
+            currentVelocity = new Vector2(0.0f, 0.0f);
             currentVelocity.x = 0.0f;
             currentVelocity.y = 0.0f;
 
 
         }
+
         if (Input.GetKeyDown(KeyCode.G))
         {
             if (!godMode)
@@ -294,6 +285,7 @@ public class PlayerControllerEdu : MonoBehaviour
             else if (!grounded && lastGrounded)
             {
                 //Left the floor
+                animator.SetBool("Jump", true);
                 movementVector.y = gravity;
             }
 
@@ -368,6 +360,7 @@ public class PlayerControllerEdu : MonoBehaviour
             {
                 wantsToJump = false;
                 currentVelocity.y = jumpForce;
+                animator.SetBool("Jump", true);
             }
 
             if (wantsToDash && canDash && !isDashing)
