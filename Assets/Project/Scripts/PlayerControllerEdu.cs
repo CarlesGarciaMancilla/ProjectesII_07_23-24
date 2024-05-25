@@ -74,7 +74,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
     private void Awake()
     {
-        _col = GetComponent<CapsuleCollider2D>(); 
+        _col = GetComponent<CapsuleCollider2D>();
         sceneName = SceneManager.GetActiveScene().name;
 
 
@@ -91,19 +91,19 @@ public class PlayerControllerEdu : MonoBehaviour
         animator = GetComponent<Animator>();
         if (animator == null)
         {
-            Debug.LogError("No se encontró el componente Animator.", this);
+            Debug.LogError("No se encontrï¿½ el componente Animator.", this);
         }
 
 
     }
     void Start()
     {
-            currentVelocity = new Vector2(walkForce, 0);
-            dashVector = new Vector2(dashPower, 0);
+        currentVelocity = new Vector2(walkForce, 0);
+        dashVector = new Vector2(dashPower, 0);
 
 
-            movementVector = new Vector2(walkForce, 0.0f);
-        
+        movementVector = new Vector2(walkForce, 0.0f);
+
         grounded = true;
         lastGrounded = grounded;
 
@@ -111,12 +111,14 @@ public class PlayerControllerEdu : MonoBehaviour
 
     private void Update()
     {
-        if (stop == true) 
+        if (stop == true)
         {
             timer = timeSlider.maxValue;
+
+
         }
 
-        
+
 
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -125,7 +127,7 @@ public class PlayerControllerEdu : MonoBehaviour
         }
 
 
-            if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G))
         {
             if (!godMode)
             {
@@ -172,9 +174,9 @@ public class PlayerControllerEdu : MonoBehaviour
         //    wantsToDash = false;
         //}
         //wantsToJump = Input.GetKey(KeyCode.Space);
-        wantsToJump = Input.GetMouseButton(0);       
+        wantsToJump = Input.GetMouseButton(0);
         wantsToDash = Input.GetMouseButton(0);
-        if (Input.GetMouseButton(0)) 
+        if (Input.GetMouseButton(0))
         {
             stop = false;
         }
@@ -189,7 +191,7 @@ public class PlayerControllerEdu : MonoBehaviour
         if (infierno.activeSelf == false)
         {
             timeSlider.gameObject.SetActive(true);
-            if (currentVelocity == new Vector2(0.0f,0.0f))
+            if (currentVelocity == new Vector2(0.0f, 0.0f))
             {
                 timer = timeSlider.maxValue;
             }
@@ -209,7 +211,7 @@ public class PlayerControllerEdu : MonoBehaviour
             gameObject.transform.localScale = new Vector3(1, 1, 1);
         }
 
-        
+
 
     }
     // Update is called once per frame
@@ -258,6 +260,13 @@ public class PlayerControllerEdu : MonoBehaviour
             if (wantsToDash && canDash && !isDashing)
             {
                 StartDash();
+
+
+            }
+            else if (isDashing)
+            {
+
+                ContinueDash();
 
 
             }
@@ -323,7 +332,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
             }
         }
-        else if (infierno.activeSelf == true) 
+        else if (infierno.activeSelf == true)
         {
             /////////////////////////// MOVIMIENTO INFIERNO //////////////////////////////
 
@@ -334,6 +343,7 @@ public class PlayerControllerEdu : MonoBehaviour
             foreach (Collider2D c in checks)
             {
                 grounded |= c.transform.CompareTag("ground");
+                grounded |= c.transform.CompareTag("Boton");
             }
 
             grounded &= rb.velocity.y <= 0.1f;
@@ -364,6 +374,12 @@ public class PlayerControllerEdu : MonoBehaviour
                 //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
                 rb.MovePosition(rb.position - currentVelocity * Time.fixedDeltaTime);
             }
+            else if (stop == true)
+            {
+                movementVector.y = gravity;
+                currentVelocity += new Vector2(0.0f, movementVector.y) * Time.fixedDeltaTime;
+                rb.MovePosition(rb.position - new Vector2(0.0f, currentVelocity.y) * Time.fixedDeltaTime);
+            }
             if (wantsToJump && grounded && !isDashing && !stopDash)
             {
                 wantsToJump = false;
@@ -384,7 +400,14 @@ public class PlayerControllerEdu : MonoBehaviour
 
 
             }
-        }   
+            else if (isDashing)
+            {
+
+                ContinueDash();
+
+
+            }
+        }
         else
         {
             /////////////////////////// MOVIMIENTO NORMAL //////////////////////////////
@@ -395,6 +418,7 @@ public class PlayerControllerEdu : MonoBehaviour
             foreach (Collider2D c in checks)
             {
                 grounded |= c.transform.CompareTag("ground");
+                grounded |= c.transform.CompareTag("Boton");
             }
 
             grounded &= rb.velocity.y <= 0.1f;
@@ -434,6 +458,12 @@ public class PlayerControllerEdu : MonoBehaviour
 
 
             }
+            else if(stop == true)
+            {
+                movementVector.y = -gravity;
+                currentVelocity += new Vector2(0.0f,movementVector.y) * Time.fixedDeltaTime;
+                rb.MovePosition(rb.position + new Vector2 (0.0f,currentVelocity.y) * Time.fixedDeltaTime);
+            }
 
             //VIGILAR AMB LA Y
             //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
@@ -453,7 +483,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
             }
 
-            
+
 
 
 
@@ -514,7 +544,7 @@ public class PlayerControllerEdu : MonoBehaviour
     public IEnumerator Muerte()
     {
 
-        _col.enabled = false;
+        //_col.enabled = false;
         Debug.Log("muerte");
         audioDeath.Play();
         muerteParticle.Play();
@@ -617,9 +647,9 @@ public class PlayerControllerEdu : MonoBehaviour
             //    }
             //}
         }
-        else if (collision.transform.CompareTag("dash")) 
+        else if (collision.transform.CompareTag("dash"))
         {
-         canDash = true;
+            canDash = true;
         }
         else if (collision.transform.CompareTag("Water"))
         {
@@ -642,27 +672,27 @@ public class PlayerControllerEdu : MonoBehaviour
         {
             if (sceneName == "Nivel1")
             {
-                SceneManager.LoadScene("Nivel2");
+                SceneManager.LoadScene("Load1");
             }
             else if (sceneName == "Nivel2")
             {
-                SceneManager.LoadScene("Nivel3");
+                SceneManager.LoadScene("Load2");
             }
             else if (sceneName == "Nivel3")
             {
-                SceneManager.LoadScene("Nivel4");
+                SceneManager.LoadScene("Load3");
             }
             else if (sceneName == "Nivel4")
             {
-                SceneManager.LoadScene("Nivel5");
+                SceneManager.LoadScene("Load4");
             }
             else if (sceneName == "Nivel5")
             {
-                SceneManager.LoadScene("Nivel6");
+                SceneManager.LoadScene("Load5");
             }
             else if (sceneName == "Nivel6")
             {
-                SceneManager.LoadScene("Nivel7");
+                SceneManager.LoadScene("Load6");
             }
             else
             {
@@ -673,7 +703,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-         if (collision.transform.CompareTag("dash"))
+        if (collision.transform.CompareTag("dash"))
         {
             canDash = false;
         }
@@ -706,6 +736,62 @@ public class PlayerControllerEdu : MonoBehaviour
         if (isDashing)
         {
             
+            // Calcular la distancia recorrida desde el inicio del dash
+            dashTravelledDistance = Vector2.Distance(dashStartPos, transform.position);
+            Debug.Log(dashTravelledDistance);
+            if (dashTravelledDistance < dashDistance)
+            {
+                if (infierno.activeSelf == true)
+                {
+                    movementVector.y = gravity;
+                    currentVelocity += movementVector * Time.fixedDeltaTime;
+                    currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
+                    rb.MovePosition(rb.position - currentVelocity * Time.fixedDeltaTime * 5);
+                }
+                else
+                {
+                    movementVector.y = gravity;
+                    currentVelocity += movementVector * Time.fixedDeltaTime;
+                    currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
+                    rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime * 5);
+                }
+
+            }
+            else
+            {
+                EndDash();
+            }
+        }
+    }
+
+    private void EndDash()
+    {
+        isDashing = false;
+        gravity = originalGravity; // Restaurar la gravedad
+        grounded = true;
+        stopDash = true;
+
+        // Restablecer la velocidad horizontal y vertical a los valores previos al dash
+
+    }
+
+
+    private void StartDash()
+    {
+        stopDash = false;
+        isDashing = true;
+        originalGravity = gravity;
+        dashStartPos = transform.position; // Almacenar la posicion inicial del dash
+        Debug.Log(dashStartPos);
+        gravity = 0f; // Desactivar la gravedad durante el dash
+        currentVelocity.y = gravity;
+    }
+
+    private void ContinueDash()
+    {
+        if (isDashing)
+        {
+
             // Calcular la distancia recorrida desde el inicio del dash
             dashTravelledDistance = Vector2.Distance(dashStartPos, transform.position);
             Debug.Log(dashTravelledDistance);
