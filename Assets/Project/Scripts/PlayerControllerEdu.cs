@@ -91,7 +91,7 @@ public class PlayerControllerEdu : MonoBehaviour
         animator = GetComponent<Animator>();
         if (animator == null)
         {
-            Debug.LogError("No se encontrï¿½ el componente Animator.", this);
+            Debug.LogError("No se encontró el componente Animator.", this);
         }
 
 
@@ -270,13 +270,6 @@ public class PlayerControllerEdu : MonoBehaviour
 
 
             }
-            else if (isDashing)
-            {
-
-                ContinueDash();
-
-
-            }
         }
         if (agua && infierno.activeSelf == true)
         {
@@ -390,13 +383,6 @@ public class PlayerControllerEdu : MonoBehaviour
             if (wantsToDash && canDash && !isDashing)
             {
                 StartDash();
-
-
-            }
-            else if (isDashing)
-            {
-
-                ContinueDash();
 
 
             }
@@ -735,7 +721,7 @@ public class PlayerControllerEdu : MonoBehaviour
     {
         if (isDashing)
         {
-            
+
             // Calcular la distancia recorrida desde el inicio del dash
             dashTravelledDistance = Vector2.Distance(dashStartPos, transform.position);
             Debug.Log(dashTravelledDistance);
@@ -774,5 +760,4 @@ public class PlayerControllerEdu : MonoBehaviour
         // Restablecer la velocidad horizontal y vertical a los valores previos al dash
 
     }
-
 }
