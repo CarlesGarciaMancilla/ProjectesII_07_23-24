@@ -336,6 +336,7 @@ public class PlayerControllerEdu : MonoBehaviour
             foreach (Collider2D c in checks)
             {
                 grounded |= c.transform.CompareTag("ground");
+                grounded |= c.transform.CompareTag("Boton");
             }
 
             grounded &= rb.velocity.y <= 0.1f;
@@ -403,6 +404,7 @@ public class PlayerControllerEdu : MonoBehaviour
             foreach (Collider2D c in checks)
             {
                 grounded |= c.transform.CompareTag("ground");
+                grounded |= c.transform.CompareTag("Boton");
             }
 
             grounded &= rb.velocity.y <= 0.1f;
@@ -676,7 +678,7 @@ public class PlayerControllerEdu : MonoBehaviour
             }
             else if (sceneName == "Nivel6")
             {
-                SceneManager.LoadScene("Nivel7");
+                SceneManager.LoadScene("Nivel7 1");
             }
             else
             {
