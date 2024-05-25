@@ -7,6 +7,7 @@ public class TimeEnemies : MonoBehaviour
     public GameObject[] enemies;
     public Animator[] enemiesAnimator;
     public bool start = false;
+    public GameObject infierno;
 
 
     // Start is called before the first frame update
@@ -32,7 +33,7 @@ public class TimeEnemies : MonoBehaviour
             start = true;
         }
 
-        if (start == false)
+        if (start == false || infierno.activeSelf == true)
         {
 
             for (int i = 0; i < enemiesAnimator.Length; i++)
