@@ -89,6 +89,7 @@ namespace TarodevController
                 particles.Clear();
                 particles.Stop();
             }
+            sceneName = SceneManager.GetActiveScene().name;
             onboarding.SetActive(true);
             hellReady.SetActive(false);
             _statsSave = _stats;
