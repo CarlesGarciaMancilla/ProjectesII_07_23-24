@@ -530,7 +530,7 @@ public class PlayerControllerEdu : MonoBehaviour
     public IEnumerator Muerte()
     {
 
-        _col.enabled = false;
+        //_col.enabled = false;
         Debug.Log("muerte");
         audioDeath.Play();
         muerteParticle.Play();
