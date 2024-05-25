@@ -658,27 +658,27 @@ public class PlayerControllerEdu : MonoBehaviour
         {
             if (sceneName == "Nivel1")
             {
-                SceneManager.LoadScene("Nivel2");
+                SceneManager.LoadScene("Load1");
             }
             else if (sceneName == "Nivel2")
             {
-                SceneManager.LoadScene("Nivel3");
+                SceneManager.LoadScene("Load2");
             }
             else if (sceneName == "Nivel3")
             {
-                SceneManager.LoadScene("Nivel4");
+                SceneManager.LoadScene("Load3");
             }
             else if (sceneName == "Nivel4")
             {
-                SceneManager.LoadScene("Nivel5");
+                SceneManager.LoadScene("Load4");
             }
             else if (sceneName == "Nivel5")
             {
-                SceneManager.LoadScene("Nivel6");
+                SceneManager.LoadScene("Load5");
             }
             else if (sceneName == "Nivel6")
             {
-                SceneManager.LoadScene("Nivel7 1");
+                SceneManager.LoadScene("Load6");
             }
             else
             {
