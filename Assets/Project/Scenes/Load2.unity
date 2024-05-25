@@ -43941,7 +43941,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1014042448}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c0fb2b986234b4ebfeaa821b73539b, type: 3}
   m_Name: 
@@ -43952,30 +43952,8 @@ MonoBehaviour:
   enemiesAnimator:
   - {fileID: 0}
   - {fileID: 0}
-  movementScript: {fileID: 1014042450}
-  inverseMapMovement: {fileID: 1014042451}
---- !u!114 &1014042450 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 503909259558762951, guid: 2449ff98158473d4e9f78a109319b42d, type: 3}
-  m_PrefabInstance: {fileID: 1237544249}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1014042448}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b930918e36198d4d8266cf44d717ffe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1014042451 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4821979394893601340, guid: 2449ff98158473d4e9f78a109319b42d, type: 3}
-  m_PrefabInstance: {fileID: 1237544249}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1014042448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14a92e848dd8c3447bdc782a6eeb46ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  start: 0
+  infierno: {fileID: 0}
 --- !u!4 &1014042457 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5732161375626462438, guid: 2449ff98158473d4e9f78a109319b42d, type: 3}
