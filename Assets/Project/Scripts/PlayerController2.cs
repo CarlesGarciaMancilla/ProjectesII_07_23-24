@@ -95,7 +95,7 @@ namespace TarodevController
             _statsSave = _stats;
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<BoxCollider2D>(); // Cambiado de CapsuleCollider2D a BoxCollider2D
-
+            sceneName = SceneManager.GetActiveScene().name;
             _cachedQueryStartInColliders = Physics2D.queriesStartInColliders;
             _frameInput = new FrameInput();
             infierno.SetActive(false);
