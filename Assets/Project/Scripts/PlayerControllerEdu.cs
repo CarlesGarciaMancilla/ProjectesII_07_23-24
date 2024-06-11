@@ -46,7 +46,6 @@ public class PlayerControllerEdu : MonoBehaviour
     //public ParticleSystem particles;
     private string sceneName;
     public GameObject mapa;
-    public GameObject fondoMapa;
     public GameObject fondoInfierno;
     public GameObject nubes;
     public GameObject hellLoading;
@@ -56,6 +55,7 @@ public class PlayerControllerEdu : MonoBehaviour
     public GameObject infierno;
     public AudioSource audioTp;
     public AudioSource audioDeath;
+    public AudioSource audioJump;
     private Vector3 position;
     public Image panel;
     //public ParticleSystem muerteParticle;
@@ -354,6 +354,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 //Left the floor
                 animator.SetBool("Jump", true);
                 movementVector.y = gravity;
+                audioJump.Play();
             }
 
             lastGrounded = grounded;
@@ -378,6 +379,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 wantsToJump = false;
                 currentVelocity.y = -jumpForce;
                 animator.SetBool("Jump", true);
+                audioJump.Play();
             }
 
             if (wantsToDash && canDash && !isDashing)
@@ -422,6 +424,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 //Left the floor
                 animator.SetBool("Jump", true);
                 movementVector.y = -gravity;
+                audioJump.Play();
             }
             else if (isDashing)
             {
@@ -486,7 +489,6 @@ public class PlayerControllerEdu : MonoBehaviour
         panel.CrossFadeAlpha(0, 0.5f, false);
         audioTp.Play();
         mapa.SetActive(false);
-        fondoMapa.SetActive(false);
         nubes.SetActive(false);
         infierno.SetActive(true);
         fondoInfierno.SetActive(true);
@@ -500,7 +502,6 @@ public class PlayerControllerEdu : MonoBehaviour
         panel.CrossFadeAlpha(0, 0.5f, false);
         audioTp.Play();
         mapa.SetActive(true);
-        fondoMapa.SetActive(true);
         nubes.SetActive(true);
         infierno.SetActive(false);
         fondoInfierno.SetActive(false);
