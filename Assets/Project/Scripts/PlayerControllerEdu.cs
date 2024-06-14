@@ -18,6 +18,8 @@ public class PlayerControllerEdu : MonoBehaviour
     private Vector2 dashStartPos;
     private float originalGravity;
     private float dashTravelledDistance;
+    private float jumpBufferCounter;
+    private float jumpBuffer = 0.1f;
     [SerializeField] float walkForce;
     [SerializeField] float maxWalkVelocity;
     [SerializeField] float jumpForce;
@@ -179,6 +181,11 @@ public class PlayerControllerEdu : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             stop = false;
+            jumpBufferCounter = jumpBuffer;
+        }
+        else 
+        {
+            jumpBufferCounter -= Time.deltaTime;
         }
 
 
@@ -329,11 +336,24 @@ public class PlayerControllerEdu : MonoBehaviour
         {
             /////////////////////////// MOVIMIENTO INFIERNO //////////////////////////////
 
-            //Grounded
             Collider2D[] checks = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
+            Collider2D[] checksR = Physics2D.OverlapCircleAll(groundCheck.position - new Vector3(0.5f, 0.0f, 0.0f), 0.1f);
+            Collider2D[] checksL = Physics2D.OverlapCircleAll(groundCheck.position + new Vector3(0.8f, 0.0f, 0.0f), 0.1f);
 
             grounded = false;
             foreach (Collider2D c in checks)
+            {
+                grounded |= c.transform.CompareTag("ground");
+                grounded |= c.transform.CompareTag("Boton");
+            }
+
+            foreach (Collider2D c in checksR)
+            {
+                grounded |= c.transform.CompareTag("ground");
+                grounded |= c.transform.CompareTag("Boton");
+            }
+
+            foreach (Collider2D c in checksL)
             {
                 grounded |= c.transform.CompareTag("ground");
                 grounded |= c.transform.CompareTag("Boton");
@@ -374,12 +394,12 @@ public class PlayerControllerEdu : MonoBehaviour
                 currentVelocity += new Vector2(0.0f, movementVector.y) * Time.fixedDeltaTime;
                 rb.MovePosition(rb.position - new Vector2(0.0f, currentVelocity.y) * Time.fixedDeltaTime);
             }
-            if (wantsToJump && grounded && !isDashing && !stopDash)
+            if (wantsToJump && grounded && !isDashing && !stopDash && jumpBufferCounter > 0.0f)
             {
                 wantsToJump = false;
+                jumpBufferCounter = 0;
                 currentVelocity.y = -jumpForce;
                 animator.SetBool("Jump", true);
-                audioJump.Play();
             }
 
             if (wantsToDash && canDash && !isDashing)
@@ -401,6 +421,8 @@ public class PlayerControllerEdu : MonoBehaviour
             /////////////////////////// MOVIMIENTO NORMAL //////////////////////////////
             //Grounded
             Collider2D[] checks = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
+            Collider2D[] checksR = Physics2D.OverlapCircleAll(groundCheck.position + new Vector3(0.5f,0.0f,0.0f), 0.1f);
+            Collider2D[] checksL = Physics2D.OverlapCircleAll(groundCheck.position - new Vector3(0.8f, 0.0f, 0.0f), 0.1f);
 
             grounded = false;
             foreach (Collider2D c in checks)
@@ -409,9 +431,21 @@ public class PlayerControllerEdu : MonoBehaviour
                 grounded |= c.transform.CompareTag("Boton");
             }
 
+            foreach (Collider2D c in checksR)
+            {
+                grounded |= c.transform.CompareTag("ground");
+                grounded |= c.transform.CompareTag("Boton");
+            }
+
+            foreach (Collider2D c in checksL)
+            {
+                grounded |= c.transform.CompareTag("ground");
+                grounded |= c.transform.CompareTag("Boton");
+            }
+
             grounded &= rb.velocity.y <= 0.1f;
 
-            if (grounded && !lastGrounded)
+            if (grounded && !lastGrounded )
             {
                 animator.SetBool("Jump", false);
                 stopDash = false;
@@ -458,9 +492,10 @@ public class PlayerControllerEdu : MonoBehaviour
             //currentVelocity.y = Mathf.Min(currentVelocity.y, maxFallVelocity);
 
 
-            if (wantsToJump && grounded && !isDashing && !stopDash)
+            if (wantsToJump && grounded && !isDashing && !stopDash && jumpBufferCounter > 0.0f)
             {
                 wantsToJump = false;
+                jumpBufferCounter = 0;
                 currentVelocity.y = jumpForce;
                 animator.SetBool("Jump", true);
             }
@@ -596,43 +631,6 @@ public class PlayerControllerEdu : MonoBehaviour
         if (collision.transform.CompareTag("traps"))
         {
             Debug.Log(collision.name);
-            //Destroy(this.gameObject);
-            //if (!godMode)
-            //{
-            //    if (infierno.activeSelf == false && canInferno == true)
-            //    {
-            //        _col.enabled = false;
-            //        Debug.LogError("Detected a trap, going to inferno");
-            //        StartCoroutine(FadeInInfierno());
-            //        canInferno = false;
-
-
-            //    }
-            //    else if (mapa.activeSelf == true && canInferno == false)
-            //    {
-
-            //        Debug.Log("traps2");
-            //        StartCoroutine(Muerte());
-            //    }
-            //    else if (infierno.activeSelf == true)
-            //    {
-
-            //        Debug.Log("traps3");
-            //        StartCoroutine(Muerte());
-            //    }
-            //}
-            //else if (godMode)
-            //{
-            //    if (infierno.activeSelf == false && canInferno == true)
-            //    {
-            //        _col.enabled = false;
-            //        Debug.LogError("Detected a trap, going to inferno");
-            //        StartCoroutine(FadeInInfierno());
-            //        canInferno = false;
-
-
-            //    }
-            //}
         }
         else if (collision.transform.CompareTag("dash"))
         {
