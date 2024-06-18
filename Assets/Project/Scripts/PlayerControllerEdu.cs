@@ -60,7 +60,6 @@ public class PlayerControllerEdu : MonoBehaviour
     public AudioSource audioJump;
     private Vector3 position;
     public Image panel;
-    //public ParticleSystem muerteParticle;
 
 
     public bool inferno = false;
@@ -120,9 +119,6 @@ public class PlayerControllerEdu : MonoBehaviour
 
         }
 
-
-
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             SceneManager.LoadScene("menu");
@@ -167,15 +163,6 @@ public class PlayerControllerEdu : MonoBehaviour
         }
 
 
-        //if (Input.GetKeyDown(KeyCode.C)) 
-        //{
-        //wantsToDash = true;
-        //}
-        //else if (Input.GetKeyUp(KeyCode.C))
-        //{
-        //    wantsToDash = false;
-        //}
-        //wantsToJump = Input.GetKey(KeyCode.Space);
         wantsToJump = Input.GetMouseButton(0);
         wantsToDash = Input.GetMouseButton(0);
         if (Input.GetMouseButton(0))
@@ -221,7 +208,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
 
     }
-    // Update is called once per frame
+
     void FixedUpdate()
     {
         if (agua && infierno.activeSelf == false)
@@ -589,7 +576,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 {
                     animator.SetBool("Death", true);
                     _col.enabled = false;
-                    Debug.LogError("Detected a trap, going to inferno");
+                    Debug.Log("Detected a trap, going to inferno");
                     StartCoroutine(FadeInInfierno());
                     canInferno = false;
 
@@ -613,7 +600,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 if (infierno.activeSelf == false && canInferno == true)
                 {
                     _col.enabled = false;
-                    Debug.LogError("Detected a trap, going to inferno");
+                    Debug.Log("Detected a trap, going to inferno");
                     StartCoroutine(FadeInInfierno());
                     canInferno = false;
 
