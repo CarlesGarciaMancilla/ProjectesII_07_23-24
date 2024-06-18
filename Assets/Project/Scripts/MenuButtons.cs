@@ -12,20 +12,100 @@ public class MenuButtons : MonoBehaviour
     public GameObject canvasTitle;
     public GameObject canvasLevels;
     public GameObject canvasOptions;
+    public Image panel;
 
 
     void Start()
     {
+        panel.CrossFadeAlpha(0, 1.0f, false);
         canvasOptions.SetActive(false);
         canvasLevels.SetActive(false);
+
     }
+
+    public IEnumerator FadeOut()
+    {
+        Debug.Log("llama a la corrutina");
+        panel.CrossFadeAlpha(1, 0.5f, false);
+        Debug.Log("siguela corrutina");
+        yield return new WaitForSeconds(0.5f);
+
+    }
+    public IEnumerator Level1()
+    {
+        Debug.Log("llama a la corrutina");
+        panel.CrossFadeAlpha(1, 0.5f, false);
+        Debug.Log("siguela corrutina");
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("Nivel1");
+    }
+
+    public IEnumerator Level2()
+    {
+        Debug.Log("llama a la corrutina");
+        panel.CrossFadeAlpha(1, 0.5f, false);
+        Debug.Log("siguela corrutina");
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("Nivel2");
+    }
+
+    public IEnumerator Level3()
+    {
+        Debug.Log("llama a la corrutina");
+        panel.CrossFadeAlpha(1, 0.5f, false);
+        Debug.Log("siguela corrutina");
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("Nivel3");
+    }
+
+    public IEnumerator Level4()
+    {
+        Debug.Log("llama a la corrutina");
+        panel.CrossFadeAlpha(1, 0.5f, false);
+        Debug.Log("siguela corrutina");
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("Nivel4");
+    }
+    public IEnumerator Level5()
+    {
+        Debug.Log("llama a la corrutina");
+        panel.CrossFadeAlpha(1, 0.5f, false);
+        Debug.Log("siguela corrutina");
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("Nivel5");
+    }
+    public IEnumerator Level6()
+    {
+        Debug.Log("llama a la corrutina");
+        panel.CrossFadeAlpha(1, 0.5f, false);
+        Debug.Log("siguela corrutina");
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("Nivel6");
+    }
+    public IEnumerator Level7()
+    {
+        Debug.Log("llama a la corrutina");
+        panel.CrossFadeAlpha(1, 0.5f, false);
+        Debug.Log("siguela corrutina");
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("Nivel7 1");
+    }
+    public IEnumerator Menu()
+    {
+        Debug.Log("llama a la corrutina");
+        panel.CrossFadeAlpha(1, 0.5f, false);
+        Debug.Log("siguela corrutina");
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene("menu");
+    }
+
 
     public void OnclickButton(string button)
     {
         switch (button)
         {
             case "play":
-                SceneManager.LoadScene("Nivel1");
+                StartCoroutine(Level1());
                 break;
             case "levels":
                 canvasTitle.SetActive(false);
@@ -38,7 +118,7 @@ public class MenuButtons : MonoBehaviour
                 canvasLevels.SetActive(false);
                 break;
             case "menu":
-                SceneManager.LoadScene("menu");
+                StartCoroutine(Menu());
                 break;
             case "back":
                 canvasTitle.SetActive(true);
@@ -46,25 +126,26 @@ public class MenuButtons : MonoBehaviour
                 canvasLevels.SetActive(false);
                 break;
             case "level1":
-                SceneManager.LoadScene("Nivel1");
+                StartCoroutine(Level1());            
                 break;
             case "level2":
-                SceneManager.LoadScene("Nivel2");
+                StartCoroutine(Level2());
+
                 break;
             case "level3":
-                SceneManager.LoadScene("Nivel3");
+                StartCoroutine(Level3());
                 break;
             case "level4":
-                SceneManager.LoadScene("Nivel4");
+                StartCoroutine(Level4());
                 break;
             case "level5":
-                SceneManager.LoadScene("Nivel5");
+                StartCoroutine(Level5());
                 break;
             case "level6":
-                SceneManager.LoadScene("Nivel6");
+                StartCoroutine(Level6());
                 break;
             case "level7":
-                SceneManager.LoadScene("Nivel7 1");
+                StartCoroutine(Level7());
                 break;
             case "exit":
 #if UNITY_EDITOR

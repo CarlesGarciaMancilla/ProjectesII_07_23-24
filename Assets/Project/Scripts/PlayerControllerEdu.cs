@@ -139,6 +139,7 @@ public class PlayerControllerEdu : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
+            Respawn.instance.RestartLevel();
             SceneManager.LoadScene(sceneName);
 
         }
@@ -361,7 +362,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 //Left the floor
                 animator.SetBool("Jump", true);
                 movementVector.y = gravity;
-                audioJump.Play();
+                
             }
 
             lastGrounded = grounded;
@@ -387,6 +388,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 jumpBufferCounter = 0;
                 currentVelocity.y = -jumpForce;
                 animator.SetBool("Jump", true);
+                audioJump.Play();
             }
 
             if (wantsToDash && canDash && !isDashing)
@@ -445,7 +447,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 //Left the floor
                 animator.SetBool("Jump", true);
                 movementVector.y = -gravity;
-                audioJump.Play();
+
             }
             else if (isDashing)
             {
@@ -485,6 +487,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 jumpBufferCounter = 0;
                 currentVelocity.y = jumpForce;
                 animator.SetBool("Jump", true);
+                audioJump.Play();
             }
 
             if (wantsToDash && canDash && !isDashing)
@@ -506,7 +509,9 @@ public class PlayerControllerEdu : MonoBehaviour
 
     private void ToInfierno(GameObject mapa, GameObject infierno)
     {
+        stop = true;
         currentVelocity.x = 0.0f;
+        currentVelocity.y = 0.0f;
         _col.enabled = true;
         panel.CrossFadeAlpha(0, 0.5f, false);
         audioTp.Play();
@@ -514,12 +519,12 @@ public class PlayerControllerEdu : MonoBehaviour
         nubes.SetActive(false);
         infierno.SetActive(true);
         fondoInfierno.SetActive(true);
-        stop = true;
         Respawn.instance.InfernoRespawn(gameObject);
     }
 
     private void ReturnToMap(GameObject mapa, GameObject infierno)
     {
+        
         _col.enabled = true;
         panel.CrossFadeAlpha(0, 0.5f, false);
         audioTp.Play();
@@ -530,7 +535,6 @@ public class PlayerControllerEdu : MonoBehaviour
         timeSlider.enabled = true;
         timer = 10f;
         stop = true;
-        //currentVelocity.x = -currentVelocity.x;
         Respawn.instance.NormalRespawn(gameObject);
 
 
@@ -552,7 +556,7 @@ public class PlayerControllerEdu : MonoBehaviour
     }
     public IEnumerator Muerte()
     {
-
+        stop = true;
         //_col.enabled = false;
         Debug.Log("muerte");
         audioDeath.Play();
@@ -565,6 +569,48 @@ public class PlayerControllerEdu : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    public IEnumerator NextLevel()
+    {
+        panel.CrossFadeAlpha(1, 0.5f, false);
+        yield return new WaitForSeconds(0.5f);
+        if (sceneName == "Nivel1")
+        {
+ 
+            SceneManager.LoadScene("Load1");
+        }
+        else if (sceneName == "Nivel2")
+        {
+
+            SceneManager.LoadScene("Load2");
+        }
+        else if (sceneName == "Nivel3")
+        {
+
+            SceneManager.LoadScene("Load3");
+        }
+        else if (sceneName == "Nivel4")
+        {
+
+            SceneManager.LoadScene("Load4");
+        }
+        else if (sceneName == "Nivel5")
+        {
+
+            SceneManager.LoadScene("Load5");
+        }
+        else if (sceneName == "Nivel6")
+        {
+
+            SceneManager.LoadScene("Load6");
+        }
+        else
+        {
+
+            SceneManager.LoadScene("menu");
+        }
+    
+}
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
@@ -574,6 +620,7 @@ public class PlayerControllerEdu : MonoBehaviour
             {
                 if (infierno.activeSelf == false && canInferno == true)
                 {
+                    stop = true;
                     animator.SetBool("Death", true);
                     _col.enabled = false;
                     Debug.Log("Detected a trap, going to inferno");
@@ -584,13 +631,13 @@ public class PlayerControllerEdu : MonoBehaviour
                 }
                 else if (mapa.activeSelf == true && canInferno == false)
                 {
-
+                    stop = true;
                     Debug.Log("traps2");
                     StartCoroutine(Muerte());
                 }
                 else if (infierno.activeSelf == true)
                 {
-
+                    stop = true;
                     Debug.Log("traps3");
                     StartCoroutine(Muerte());
                 }
@@ -642,34 +689,7 @@ public class PlayerControllerEdu : MonoBehaviour
         }
         else if (collision.CompareTag("final"))
         {
-            if (sceneName == "Nivel1")
-            {
-                SceneManager.LoadScene("Load1");
-            }
-            else if (sceneName == "Nivel2")
-            {
-                SceneManager.LoadScene("Load2");
-            }
-            else if (sceneName == "Nivel3")
-            {
-                SceneManager.LoadScene("Load3");
-            }
-            else if (sceneName == "Nivel4")
-            {
-                SceneManager.LoadScene("Load4");
-            }
-            else if (sceneName == "Nivel5")
-            {
-                SceneManager.LoadScene("Load5");
-            }
-            else if (sceneName == "Nivel6")
-            {
-                SceneManager.LoadScene("Load6");
-            }
-            else
-            {
-                SceneManager.LoadScene("menu");
-            }
+            StartCoroutine(NextLevel());
         }
     }
 

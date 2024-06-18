@@ -16,7 +16,7 @@ public class Respawn : MonoBehaviour
         instance = this;
             DontDestroyOnLoad(this);
         }
-        
+
         
     }
 

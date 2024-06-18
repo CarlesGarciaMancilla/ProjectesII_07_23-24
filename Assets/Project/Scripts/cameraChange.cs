@@ -17,7 +17,7 @@ public class cameraChange : MonoBehaviour
     void Start()
     {
         camera2.SetActive(false);
-        panel.CrossFadeAlpha(0, 1.0f, false);
+       // panel.CrossFadeAlpha(0, 1.0f, false);
 
     }
 
