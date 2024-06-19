@@ -41,6 +41,7 @@ public class PlayerControllerEdu : MonoBehaviour
     [SerializeField] private bool lastGrounded;
     [SerializeField] Transform groundCheck;
     public ParticleSystem muerteParticle;
+    public ParticleSystem jumpParticle;
 
 
     //cosas mapa
@@ -356,6 +357,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
             if (grounded && !lastGrounded)
             {
+                jumpParticle.Play();
                 animator.SetBool("Jump", false);
                 stopDash = false;
                 //I touched the floor
@@ -365,6 +367,7 @@ public class PlayerControllerEdu : MonoBehaviour
             else if (!grounded && lastGrounded)
             {
                 //Left the floor
+                jumpParticle.Stop();
                 animator.SetBool("Jump", true);
                 movementVector.y = gravity;
                 
@@ -389,6 +392,7 @@ public class PlayerControllerEdu : MonoBehaviour
             }
             if (wantsToJump && grounded && !isDashing && !stopDash && jumpBufferCounter > 0.0f)
             {
+                jumpParticle.Play();
                 wantsToJump = false;
                 jumpBufferCounter = 0;
                 currentVelocity.y = -jumpForce;
@@ -441,6 +445,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
             if (grounded && !lastGrounded )
             {
+                jumpParticle.Play();
                 animator.SetBool("Jump", false);
                 stopDash = false;
                 //I touched the floor
@@ -451,6 +456,7 @@ public class PlayerControllerEdu : MonoBehaviour
             {
                 //Left the floor
                 animator.SetBool("Jump", true);
+                jumpParticle.Stop();
                 movementVector.y = -gravity;
 
             }
@@ -469,6 +475,7 @@ public class PlayerControllerEdu : MonoBehaviour
             if (stop == false && !isDashing)
             {
 
+                
                 currentVelocity += movementVector * Time.fixedDeltaTime;
                 currentVelocity.x = Mathf.Min(currentVelocity.x, walkForce);
                 rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime);
@@ -488,6 +495,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
             if (wantsToJump && grounded && !isDashing && !stopDash && jumpBufferCounter > 0.0f)
             {
+                jumpParticle.Play();
                 wantsToJump = false;
                 jumpBufferCounter = 0;
                 currentVelocity.y = jumpForce;
