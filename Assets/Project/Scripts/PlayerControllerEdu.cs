@@ -626,6 +626,7 @@ public class PlayerControllerEdu : MonoBehaviour
                 if (infierno.activeSelf == false && canInferno == true)
                 {
                     stop = true;
+                    audioDeath.Play();
                     animator.SetBool("Death", true);
                     _col.enabled = false;
                     Debug.Log("Detected a trap, going to inferno");

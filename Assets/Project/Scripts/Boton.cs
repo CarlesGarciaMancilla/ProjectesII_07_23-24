@@ -83,4 +83,19 @@ public class Boton : MonoBehaviour
         
 
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Player"))
+        {
+
+            Debug.Log("checkBoton");
+            audio.Play();
+            platform.SetActive(true);
+            botonActivo.SetActive(true);
+
+        }
+
+
+    }
 }
