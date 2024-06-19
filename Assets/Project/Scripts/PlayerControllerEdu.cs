@@ -115,7 +115,12 @@ public class PlayerControllerEdu : MonoBehaviour
         if (stop == true)
         {
             timer = timeSlider.maxValue;
+            animator.SetBool("Idle", true);
 
+        }
+        else if (stop == false)
+        {
+            animator.SetBool("Idle", false);
 
         }
 
@@ -524,7 +529,7 @@ public class PlayerControllerEdu : MonoBehaviour
 
     private void ReturnToMap(GameObject mapa, GameObject infierno)
     {
-        
+        animator.SetBool("Idle", true);
         _col.enabled = true;
         panel.CrossFadeAlpha(0, 0.5f, false);
         audioTp.Play();
@@ -679,7 +684,7 @@ public class PlayerControllerEdu : MonoBehaviour
         }
         else if (collision.CompareTag("checkpoint"))
         {
-            Respawn.instance.respawnPosition = gameObject.transform.position;
+            Respawn.instance.respawnPosition = collision.gameObject.transform.position;
         }
         else if (collision.CompareTag("checkpointInferno"))
         {
