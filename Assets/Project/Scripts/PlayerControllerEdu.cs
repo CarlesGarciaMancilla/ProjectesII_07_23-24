@@ -78,7 +78,7 @@ public class PlayerControllerEdu : MonoBehaviour
     {
         _col = GetComponent<CapsuleCollider2D>();
         sceneName = SceneManager.GetActiveScene().name;
-
+        
 
 
         onboarding.SetActive(true);
@@ -100,6 +100,7 @@ public class PlayerControllerEdu : MonoBehaviour
     }
     void Start()
     {
+        Respawn.instance.RestartLevel();
         currentVelocity = new Vector2(walkForce, 0);
         dashVector = new Vector2(dashPower, 0);
 
