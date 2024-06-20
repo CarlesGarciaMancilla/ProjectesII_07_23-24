@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TarodevController;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -62,6 +63,8 @@ public class PlayerControllerEdu : MonoBehaviour
     public AudioSource audioJump;
     private Vector3 position;
     public Image panel;
+    public Image panelInfierno;
+    public Image panelEarth;
 
 
     public bool inferno = false;
@@ -104,7 +107,8 @@ public class PlayerControllerEdu : MonoBehaviour
         Respawn.instance.RestartLevel();
         currentVelocity = new Vector2(walkForce, 0);
         dashVector = new Vector2(dashPower, 0);
-
+        panelInfierno.CrossFadeAlpha(0,0,false);
+        panelEarth.CrossFadeAlpha(0,0,false);
 
         movementVector = new Vector2(walkForce, 0.0f);
 
@@ -392,6 +396,7 @@ public class PlayerControllerEdu : MonoBehaviour
             }
             else if (stop == true)
             {
+                runParticle.Stop();
                 movementVector.y = gravity;
                 currentVelocity += new Vector2(0.0f, movementVector.y) * Time.fixedDeltaTime;
                 rb.MovePosition(rb.position - new Vector2(0.0f, currentVelocity.y) * Time.fixedDeltaTime);
@@ -536,6 +541,7 @@ public class PlayerControllerEdu : MonoBehaviour
         currentVelocity.y = 0.0f;
         _col.enabled = true;
         panel.CrossFadeAlpha(0, 0.5f, false);
+        panelInfierno.CrossFadeAlpha(0, 0.5f, false);
         audioTp.Play();
         mapa.SetActive(false);
         nubes.SetActive(false);
@@ -549,6 +555,7 @@ public class PlayerControllerEdu : MonoBehaviour
         animator.SetBool("Idle", true);
         _col.enabled = true;
         panel.CrossFadeAlpha(0, 0.5f, false);
+        panelEarth.CrossFadeAlpha(0, 0.5f, false);
         audioTp.Play();
         mapa.SetActive(true);
         nubes.SetActive(true);
@@ -565,6 +572,7 @@ public class PlayerControllerEdu : MonoBehaviour
     public IEnumerator FadeInInfierno()
     {
         panel.CrossFadeAlpha(1, 0.1f, false);
+        panelInfierno.CrossFadeAlpha(1, 0.1f, false);
         yield return new WaitForSeconds(1);
         animator.SetBool("Death", false);
         ToInfierno(mapa, infierno);
@@ -573,6 +581,7 @@ public class PlayerControllerEdu : MonoBehaviour
     public IEnumerator FadeInTierra()
     {
         panel.CrossFadeAlpha(1, 0.1f, false);
+        panelEarth.CrossFadeAlpha(1, 0.1f, false);
         yield return new WaitForSeconds(1);
         ReturnToMap(mapa, infierno);
     }
