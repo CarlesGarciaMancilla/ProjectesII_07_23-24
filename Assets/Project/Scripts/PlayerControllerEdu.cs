@@ -223,6 +223,7 @@ public class PlayerControllerEdu : MonoBehaviour
         if (agua && infierno.activeSelf == false)
         {
             /////////////////////////// MOVIMIENTO AGUA //////////////////////////////
+            runParticle.Stop();
             Collider2D[] checks1 = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
 
             grounded = false;
@@ -277,6 +278,7 @@ public class PlayerControllerEdu : MonoBehaviour
         if (agua && infierno.activeSelf == true)
         {
             /////////////////////////// MOVIMIENTO AGUA INFIERNO//////////////////////////////
+            runParticle.Stop();
             Collider2D[] checks1 = Physics2D.OverlapCircleAll(groundCheck.position, 0.1f);
 
             grounded = false;
