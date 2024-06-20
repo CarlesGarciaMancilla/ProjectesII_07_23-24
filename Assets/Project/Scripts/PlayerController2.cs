@@ -6,6 +6,7 @@ using UnityEngine.Video;
 using System.Collections;
 using System.Collections.Generic;
 using static UnityEngine.ParticleSystem;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace TarodevController
 {
@@ -317,6 +318,41 @@ namespace TarodevController
 
         }
 
+        public IEnumerator NextLevel()
+        {
+            panel.CrossFadeAlpha(1, 0.5f, false);
+            yield return new WaitForSeconds(0.5f);
+            if (sceneName == "Load1")
+            {
+                SceneManager.LoadScene("Nivel2");
+            }
+            else if (sceneName == "Load2")
+            {
+                SceneManager.LoadScene("Nivel3");
+            }
+            else if (sceneName == "Load3")
+            {
+                SceneManager.LoadScene("Nivel4");
+            }
+            else if (sceneName == "Load4")
+            {
+                SceneManager.LoadScene("Nivel5");
+            }
+            else if (sceneName == "Load5")
+            {
+                SceneManager.LoadScene("Nivel6");
+            }
+            else if (sceneName == "Load6")
+            {
+                SceneManager.LoadScene("Nivel7 1");
+            }
+            else
+            {
+                SceneManager.LoadScene("menu");
+            }
+
+        }
+
         public IEnumerator FadeInInfierno()
         {
            
@@ -476,34 +512,8 @@ namespace TarodevController
             }
             else if (other.CompareTag("final"))
             {
-                if (sceneName == "Load1") 
-                {
-                    SceneManager.LoadScene("Nivel2");
-                }
-                else if(sceneName == "Load2")
-                {
-                    SceneManager.LoadScene("Nivel3");
-                }
-                else if(sceneName == "Load3")
-                {
-                    SceneManager.LoadScene("Nivel4");
-                }
-                else if(sceneName == "Load4")
-                {
-                    SceneManager.LoadScene("Nivel5");
-                }
-                else if(sceneName == "Load5")
-                {
-                    SceneManager.LoadScene("Nivel6");
-                }
-                else if(sceneName == "Load6")
-                {
-                    SceneManager.LoadScene("Nivel7 1");
-                }
-                else
-                {
-                    SceneManager.LoadScene("menu");
-                }
+                StartCoroutine(NextLevel());
+
             }
 
             if (other.CompareTag("Water"))
@@ -677,8 +687,8 @@ namespace TarodevController
         public Vector2 FrameInput { get; }
     }
 
-    
 
+    
 
 
 
