@@ -42,6 +42,7 @@ public class PlayerControllerEdu : MonoBehaviour
     [SerializeField] Transform groundCheck;
     public ParticleSystem muerteParticle;
     public ParticleSystem jumpParticle;
+    public ParticleSystem runParticle;
 
 
     //cosas mapa
@@ -364,11 +365,13 @@ public class PlayerControllerEdu : MonoBehaviour
                 //I touched the floor
                 currentVelocity.y = 0.0f;
                 movementVector.y = 0;
+                runParticle.Play();
             }
             else if (!grounded && lastGrounded)
             {
                 //Left the floor
-                jumpParticle.Stop();
+                runParticle.Stop();
+                //jumpParticle.Stop();
                 animator.SetBool("Jump", true);
                 movementVector.y = gravity;
                 
@@ -452,12 +455,14 @@ public class PlayerControllerEdu : MonoBehaviour
                 //I touched the floor
                 currentVelocity.y = 0.0f;
                 movementVector.y = 0;
+                runParticle.Play();
             }
             else if (!grounded && lastGrounded)
             {
                 //Left the floor
+                runParticle.Stop();
                 animator.SetBool("Jump", true);
-                jumpParticle.Stop();
+                //jumpParticle.Stop();
                 movementVector.y = -gravity;
 
             }
@@ -485,6 +490,7 @@ public class PlayerControllerEdu : MonoBehaviour
             }
             else if(stop == true)
             {
+                runParticle.Stop();
                 movementVector.y = -gravity;
                 currentVelocity += new Vector2(0.0f,movementVector.y) * Time.fixedDeltaTime;
                 rb.MovePosition(rb.position + new Vector2 (0.0f,currentVelocity.y) * Time.fixedDeltaTime);
